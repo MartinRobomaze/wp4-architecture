@@ -129,7 +129,7 @@ The diagram below provides a concept-level view of the EUDI Wallet ecosystem for
       style identity fill:none,stroke:#9673a6,stroke-width:1px,stroke-dasharray: 5 5
       style solution fill:none,stroke:#b85450,stroke-width:1px,stroke-dasharray: 5 5
       style runtime fill:none,stroke:#b85450,stroke-width:1px,stroke-dasharray: 5 5
-
+```
 _Concept diagram for discussion and alignment. Terminology and role labels should be interpreted in line with the EUDIW ARF and the corresponding WE BUILD architecture artefacts._
 
 ### The Business Wallet for Economic Operators and Public Sector Bodies
@@ -226,5 +226,5 @@ The diagram below provides a concept-level view of the European Business Wallet 
       style identity fill:none,stroke:#9673a6,stroke-width:1px,stroke-dasharray: 5 5
       style solution fill:none,stroke:#b85450,stroke-width:1px,stroke-dasharray: 5 5
       style runtime fill:none,stroke:#b85450,stroke-width:1px,stroke-dasharray: 5 5
-
+```
 _Concept diagram for discussion and alignment. It illustrates a WE BUILD-style business wallet landscape_
