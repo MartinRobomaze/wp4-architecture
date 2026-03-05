@@ -52,7 +52,7 @@ To ensure interoperability across participants, WE BUILD uses three levels of do
 2. [**Architectural Decision Records (ADRs)**](https://github.com/webuild-consortium/wp4-architecture/tree/main/adr) - explain major architecture decisions and the reasoning behind them.
 3. [**WE BUILD Conformance Specifications (WBCS)**](https://github.com/webuild-consortium/wp4-architecture/tree/main/conformance-specs) – define the detailed technical requirements that implementations must follow.
 
-The Interoperability Testbed (ITB) is a first step toward understanding conformity assessment requirements. In a controlled consortium environment, regulatory and technical specifications are translated into executable interoperability scenarios. 
+The Interoperability Testbed (ITB) is a first step toward understanding conformity assessment requirements. In a controlled consortium environment, regulatory and technical specifications are translated into executable interoperability scenarios.
 
 ## How to get started
 The Blueprint is the starting point for understanding how WE BUILD works.
