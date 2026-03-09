@@ -1,4 +1,5 @@
-## Appendix E — Wallet Implementation and Deployment Considerations in WE BUILD
+## Appendix E. Wallet Implementation and Deployment Considerations in WE BUILD
+
 This appendix provides a short overview of wallet implementation and deployment approaches observed among WE BUILD wallet providers. It does not repeat the architectural classifications defined in the ARF, but highlights aspects that are relevant for the WE BUILD pilots.
 
 Different wallet implementations exist in the ecosystem, reflecting different user groups, device capabilities, and deployment environments. In practice, implementations often combine different approaches depending on the supported use cases.
