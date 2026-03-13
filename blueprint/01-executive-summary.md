@@ -51,8 +51,8 @@ WP2 and WP3 use cases are expected to use the capabilities provided by WP4 rathe
 To ensure interoperability across participants, WE BUILD uses three levels of documentation:
 
 1. This **Architecture & Integration Blueprint (D4.1)** – the high-level architecture and system overview.
-2. [**Architectural Decision Records (ADR)**](https://github.com/webuild-consortium/wp4-architecture/tree/main/adr) – explain major architecture decisions and the reasoning behind them.
-3. [**WE BUILD Conformance Specifications (WBCS)**](https://github.com/webuild-consortium/wp4-architecture/tree/main/conformance-specs) – define the detailed technical requirements that implementations must follow.
+2. [**Architectural Decision Records (ADR)**](https://github.com/webuild-consortium/wp4-architecture/tree/main/adr) explain major architecture decisions and the reasoning behind them.
+3. [**WE BUILD Conformance Specifications (WBCS)**](https://github.com/webuild-consortium/wp4-architecture/tree/main/conformance-specs) define the detailed technical requirements that implementations must follow.
 
 The governance process behind ADRs and WBCS, including how decisions are proposed and adopted, is described in Chapter 7.
 
