@@ -44,7 +44,7 @@ WE BUILD operates in a pilot setting but builds functional, interoperable softwa
 | issue eIDAS-QEAA | define WE BUILD-QEAA, focusing on realistic technical interoperability |
 
 ## Work Package 4 (WP4) - General Capabilities
-WP4 provides the shared technical capabilities that enable the WE BUILD use cases. Our technical groups - Architecture, Semantics, Wallet Providers, PID & EBWOID Provider, Qualified Trust Service Provider (QTSP), Trust Registry Infrastructure, and Test Infrastructure exist solely to provide the engine that powers the use cases. 
+WP4 provides the shared technical capabilities that enable the WE BUILD use cases. Our technical groups - Architecture, Semantics, Wallet Providers, PID & EBWOID Providers, Qualified Trust Service Providers (QTSP), Trust Registry Infrastructure, and Test Infrastructure exist solely to provide the engine that powers the use cases.
 
 WP2 and WP3 use cases are expected to use the capabilities provided by WP4 rather than developing parallel technical solutions.
 
