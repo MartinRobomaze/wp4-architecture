@@ -92,3 +92,16 @@ From a deployment perspective, wallet solutions can be implemented in several wa
 The underlying cryptographic architecture of wallets is defined in the ARF and related standards. This Blueprint therefore focuses on the interactions and interoperability patterns relevant for WE BUILD rather than repeating the detailed wallet architecture definitions.
 
 In practice, most deployments follow a mobile-first approach for natural persons and a server-based or enterprise-integrated approach for economic operators. Hybrid architectures may also be used to combine device-based user interaction with backend cryptographic services.
+
+
+```mermaid
+flowchart TB
+    LE["Economic operator /<br>public sector body"] -.-> |controls| EBW
+    NP["Natural person"] -.-> |represents| LE
+    NP -.-> |controls| EUDI
+    EUDI["EUDI Wallet&nbsp;&nbsp;"]-.-> |presents PID to| EBW
+    EP["EBWOID provider"] -.-> |issues EBWOID to| EBW
+    LE -.-> |"registered with<br>(in case of a company)"| BReg
+    LE -.-> |registered with| EP
+    BReg["Business registry"] -.-> |issues EU Company Certificate to| EBW
+```
