@@ -138,9 +138,17 @@ done
 echo >> main.md
 cat appendix-cs.md >> main.md
 for CS in $(cat ../conformance-specs/README.md | extract_last_parenthesis_in_line); do
+    if [ "$CS" == "_template.md" ]; then
+	cp ../conformance-specs/$CS _template_escaped.md
+	sed -i -e 's/</\&lt;/g' _template_escaped.md
+	sed -i -e 's/>/\&gt;/g' _template_escaped.md
+	CS_PATH=_template_escaped.md
+    else
+	CS_PATH=../conformance-specs/${CS}
+    fi
     echo "Adding CS: ${CS}"
     echo >> main.md
-    cat ../conformance-specs/${CS} | indent_headers | indent_headers >> main.md
+    cat $CS_PATH | indent_headers | indent_headers >> main.md
 done
 
 echo "Running kramdoc..."
