@@ -15,7 +15,7 @@ Version 0.1 (Draft)
   - [7. DID Document Structure](#7-did-document-structure)
   - [8. did:euid Registration](#8-dideuid-registration)
   - [9. did:euid Resolution](#9-dideuid-resolution)
-  - [10. Normative Requirements — did:euid](#10-normative-requirements--dideuid)
+  - [10. Normative Requirements - did:euid](#10-normative-requirements--dideuid)
 - [Part 2: DIDComm over QTSP](#part-2-didcomm-over-qtsp)
   - [11. QTSP Metadata Discovery](#11-qtsp-metadata-discovery)
   - [12. Subscriber Onboarding and Registration](#12-subscriber-onboarding-and-registration)
@@ -25,7 +25,7 @@ Version 0.1 (Draft)
   - [14. Message Submission Flow](#14-message-submission-flow)
   - [15. Message Reception Flow](#15-message-reception-flow)
   - [16. DIDComm Message Types](#16-didcomm-message-types)
-  - [17. Normative Requirements — DIDComm over QTSP](#17-normative-requirements--didcomm-over-qtsp)
+  - [17. Normative Requirements - DIDComm over QTSP](#17-normative-requirements--didcomm-over-qtsp)
 - [Part 3: WACI-DIDComm Credential Interactions](#part-3-waci-didcomm-credential-interactions)
   - [18. Overview](#18-overview)
     - [18.1 Transport and Encryption Model](#181-transport-and-encryption-model)
@@ -67,18 +67,18 @@ This specification covers:
 - Discovery of QTSP DIDComm metadata by the EBW
 - Subscriber onboarding and identity verification using OpenID4VP (per WBCS-002)
 - Establishment and maintenance of a DIDComm channel between the EBW and the QTSP
-- Message submission by the EBW (Interface 14 — Data submission)
+- Message submission by the EBW (Interface 14 - Data submission)
 - Credential issuance between EBWs using WACI-DIDComm Issue Credential 3.0
 - Credential presentation between EBWs using WACI-DIDComm Present Proof 3.0
-- Message notification and data delivery to the EBW (Interface 10 — Data transmission)
-- QERDS evidence delivery to the EBW (Interface 11 — Evidence transmission)
-- Consignment identity verification at the recipient EBW (Interface 4 — Identity verification)
+- Message notification and data delivery to the EBW (Interface 10 - Data transmission)
+- QERDS evidence delivery to the EBW (Interface 11 - Evidence transmission)
+- Consignment identity verification at the recipient EBW (Interface 4 - Identity verification)
 - The `did:euid` decentralised identifier method: syntax, document structure, registration, and resolution
 
 This specification covers the **EBW–QTSP** leg of the four-corner QERDS model only. QTSP-to-QTSP message relay (Interface 16) is out of scope and is governed by the eDelivery AS4 profile specified separately. EU Digital Directory (EDD) operator requirements are out of scope.
 
 **Out of scope:**
-- Internal QTSP services (QESeal creation, QTS creation, Evidence creation — Interfaces 5–9)
+- Internal QTSP services (QESeal creation, QTS creation, Evidence creation - Interfaces 5–9)
 - AS4 inter-QTSP relay (Interface 16)
 - EUDIW-to-QERDS interface
 - Gateway flows to legacy systems (Peppol, OOTS)
@@ -122,7 +122,7 @@ The wallet never communicates with another wallet or another QTSP directly. All 
 **DIDComm Messaging v2.1** [DIDComm] is used for the EBW–QTSP leg. DIDComm provides:
 - Application-layer end-to-end encryption independent of the transport layer (TLS)
 - Multi-transport support (WebSocket and HTTP POST)
-- A cryptographic identity model compatible with decentralised identifiers
+- A cryptographic identity model compatible with decentralized identifiers
 - A clear path toward post-quantum algorithm migration via crypto-agility
 
 **OpenID4VP** (per WBCS-002) is used for identity verification during Subscriber onboarding and token renewal, to establish the identity of the EBW owner. The resulting Bearer access token is short-lived (≤1 hour) and serves as proof of identity for all subsequent message exchanges within its validity period.
@@ -243,7 +243,7 @@ A `did:euid` DID Document represents the EBW's cryptographic identity and the QT
 
 | Verification relationship | Key type | Requirement | Notes |
 |---|---|---|---|
-| `keyAgreement` | ECDH-compatible: `OKP` (X25519) or `EC` (P-256, P-384, P-521) | SHOULD | JWE key agreement. Required if the EBW participates in WACI-DIDComm as Holder or Recipient — Sender EBWs use this key to encrypt inner payloads (Sections 18–22). |
+| `keyAgreement` | ECDH-compatible: `OKP` (X25519) or `EC` (P-256, P-384, P-521) | SHOULD | JWE key agreement. Required if the EBW participates in WACI-DIDComm as Holder or Recipient - Sender EBWs use this key to encrypt inner payloads (Sections 18–22). |
 | `assertionMethod` | Signing-capable: `EC` (P-256, P-384, P-521) or `OKP` (Ed25519) | MAY | Only needed if signing SD-JWT-VCs with a DID key. Not required for X.509/QESeal-based signing. |
 | `authentication` | Signing-capable: `EC` (P-256, P-384, P-521) or `OKP` (Ed25519) | MAY | Only needed for DIDComm Signed Messages (Section 13.4). |
 
@@ -266,7 +266,7 @@ The `DIDCommMessaging` service is **MUST**. It signals that this EBW is reachabl
 
 Registration of a `did:euid` is performed as part of Subscriber onboarding (Section 12). After successfully verifying the Subscriber's identity and receiving their public key, the QTSP registers the Subscriber's `did:euid`, public key, and its own DIDComm endpoint in the WE BUILD discovery infrastructure on the Subscriber's behalf.
 
-The internal mechanism of this registration — the discovery infrastructure's API, data format, and trust model — is **out of scope** for this specification and is governed by a separate WE BUILD Trust Registry Infrastructure specification.
+The internal mechanism of this registration - the discovery infrastructure's API, data format, and trust model - is **out of scope** for this specification and is governed by a separate WE BUILD Trust Registry Infrastructure specification.
 
 The `did:euid` is considered **active** once the QTSP has confirmed registration in the discovery infrastructure and the QTSP is listed on the Trusted List as a qualified TSP.
 
@@ -303,7 +303,7 @@ sequenceDiagram
 
 ### 9.2 Resolution Message Types
 
-**ebw/resolve-did/1.0** (EBW → QTSP):
+**ebw/resolve-did/1.0** (EBW -> QTSP):
 ```json
 {
   "type": "https://webuild.example/didcomm/ebw/resolve-did/1.0",
@@ -316,7 +316,7 @@ sequenceDiagram
 }
 ```
 
-**ebw/resolve-did-response/1.0** (QTSP → EBW):
+**ebw/resolve-did-response/1.0** (QTSP -> EBW):
 ```json
 {
   "type": "https://webuild.example/didcomm/ebw/resolve-did-response/1.0",
@@ -336,7 +336,7 @@ If resolution fails (unknown EUID, expired entry, unreachable discovery infrastr
 
 ---
 
-## 10. Normative Requirements — did:euid
+## 10. Normative Requirements - did:euid
 
 ### 10.1 QTSP Requirements
 
@@ -450,8 +450,8 @@ The EBW **MUST** include its public key in the onboarding request. This key will
 
 The identity proofing requirements for onboarding are further specified in the WP4 QTSP group specification [QTSP-SPEC]. The QTSP **MUST** require the EBW to present a credential containing the Subscriber's EUID. Accepted credential types:
 
-- **PID** (Person Identification Data) — for natural-person-operated EBWs
-- **EBWOID** (European Business Wallet Organisation Identity Document) — for legal entities
+- **PID** (Person Identification Data) - for natural-person-operated EBWs
+- **EBWOID** (European Business Wallet Organisation Identity Document) - for legal entities
 
 The credential presentation **MUST** comply with WBCS-002 (OpenID4VP, SD-JWT-VC). The QTSP **MUST** act as Verifier per WBCS-002 Section 7.2.
 
@@ -471,7 +471,7 @@ For token renewal after an already-registered Subscriber's token expires, see Se
 
 ### 12.5 Token Renewal for Registered Subscribers
 
-When a Subscriber's access token expires, the EBW **MUST** obtain a new token by repeating the OpenID4VP identity verification at the token renewal endpoint. The flow is identical to onboarding (Section 12.1) except that the Subscriber's `did:euid` is **not** re-registered — the QTSP issues a new access token for the existing registration.
+When a Subscriber's access token expires, the EBW **MUST** obtain a new token by repeating the OpenID4VP identity verification at the token renewal endpoint. The flow is identical to onboarding (Section 12.1) except that the Subscriber's `did:euid` is **not** re-registered - the QTSP issues a new access token for the existing registration.
 
 ```mermaid
 sequenceDiagram
@@ -497,7 +497,7 @@ The QTSP **MUST**:
 
 ### 12.6 Key Rotation for Registered Subscribers
 
-A Subscriber **MAY** rotate its keys at any time — for example, when a key is compromised, when a key expires, or when migrating to new cryptographic algorithms. Key rotation updates the Subscriber's DID Document in the discovery infrastructure with the new public key(s). It does **not** re-register the `did:euid` and does **not** issue a new access token.
+A Subscriber **MAY** rotate its keys at any time - for example, when a key is compromised, when a key expires, or when migrating to new cryptographic algorithms. Key rotation updates the Subscriber's DID Document in the discovery infrastructure with the new public key(s). It does **not** re-register the `did:euid` and does **not** issue a new access token.
 
 The flow is identical to onboarding (Section 12.1) with two differences: the Subscriber provides new key material instead of requesting a fresh registration, and the QTSP updates the existing DID Document entry rather than creating a new one.
 
@@ -534,7 +534,7 @@ sequenceDiagram
 The QTSP **MUST**:
 - Require the EBW to complete the OpenID4VP identity verification flow before applying any key update.
 - Verify that the EUID in the presented credential matches the `did:euid` in the rotation request.
-- Replace the Subscriber's key(s) in the DID Document atomically — old keys are removed and new keys are added in a single update.
+- Replace the Subscriber's key(s) in the DID Document atomically - old keys are removed and new keys are added in a single update.
 - Propagate the updated DID Document to the discovery infrastructure within 24 hours of confirmation.
 - Not re-register the `did:euid` and not issue a new access token as part of key rotation.
 - Return an error if the `subscriber_did` is not found in its registry.
@@ -716,14 +716,14 @@ sequenceDiagram
 
     R_EBW-->>R_QTSP: DIDComm: ebw/ack/1.0<br>{ thread_id }
 
-    note over R_QTSP: Create DeliveryToRecipient evidence<br>(triggered by ack — QESeal + QTS internal)
+    note over R_QTSP: Create DeliveryToRecipient evidence<br>(triggered by ack - QESeal + QTS internal)
 
     R_QTSP->>R_EBW: DIDComm: ebw/erds-evidence/1.0<br>{ evidence_type: DeliveryToRecipient,<br>  attachment: EN 319 522-3 XML }
 
     R_QTSP-->>S_QTSP: Delivery confirmed (AS4)
 ```
 
-**Key ordering rule (reception):** The QTSP **MUST** generate and deliver `DeliveryToRecipient` evidence only after receiving `ebw/ack/1.0` from the Recipient EBW. The evidence timestamp records confirmed receipt — the moment the EBW acknowledged the message — rather than the moment the QTSP attempted delivery.
+**Key ordering rule (reception):** The QTSP **MUST** generate and deliver `DeliveryToRecipient` evidence only after receiving `ebw/ack/1.0` from the Recipient EBW. The evidence timestamp records confirmed receipt - the moment the EBW acknowledged the message - rather than the moment the QTSP attempted delivery.
 
 ---
 
@@ -733,7 +733,7 @@ All message types are defined under the `ebw` protocol namespace. Message bodies
 
 ### 16.1 ebw/ping/1.0
 
-**Direction:** EBW → QTSP  
+**Direction:** EBW -> QTSP  
 **Purpose:** Channel liveness check during WebSocket establishment.
 
 ```json
@@ -749,8 +749,8 @@ All message types are defined under the `ebw` protocol namespace. Message bodies
 
 ### 16.2 Message Submission (DIDComm Routing Forward)
 
-**Direction:** EBW → QTSP  
-**Purpose:** Submit a message for QERDS delivery (Interface 14). Uses the standard DIDComm routing forward protocol [DIDCOMM] — the QTSP acts as a mediator.
+**Direction:** EBW -> QTSP  
+**Purpose:** Submit a message for QERDS delivery (Interface 14). Uses the standard DIDComm routing forward protocol [DIDCOMM] - the QTSP acts as a mediator.
 
 ```json
 {
@@ -775,11 +775,11 @@ All message types are defined under the `ebw` protocol namespace. Message bodies
 }
 ```
 
-The `body.next` field **MUST** be the recipient EBW's `did:euid`. The QTSP resolves this DID against the WE BUILD discovery infrastructure to determine the recipient QTSP and route the message via AS4. The attachment **MUST** be a DIDComm JWE encrypted to the recipient EBW's `keyAgreement` key — the QTSP treats it as opaque bytes.
+The `body.next` field **MUST** be the recipient EBW's `did:euid`. The QTSP resolves this DID against the WE BUILD discovery infrastructure to determine the recipient QTSP and route the message via AS4. The attachment **MUST** be a DIDComm JWE encrypted to the recipient EBW's `keyAgreement` key - the QTSP treats it as opaque bytes.
 
 ### 16.3 ebw/erds-evidence/1.0
 
-**Direction:** QTSP → EBW  
+**Direction:** QTSP -> EBW  
 **Purpose:** Deliver QERDS evidence to the EBW (Interface 11).
 
 ```json
@@ -810,7 +810,7 @@ The attachment carries the signed ETSI EN 319 522-3 XML. The QTSP QESeal is embe
 
 ### 16.4 ebw/delivery-notification/1.0
 
-**Direction:** QTSP → EBW  
+**Direction:** QTSP -> EBW  
 **Purpose:** Notify the Recipient EBW of a pending inbound message (Interface 10).
 
 ```json
@@ -831,7 +831,7 @@ The attachment carries the signed ETSI EN 319 522-3 XML. The QTSP QESeal is embe
 
 ### 16.5 ebw/ack/1.0
 
-**Direction:** EBW → QTSP  
+**Direction:** EBW -> QTSP  
 **Purpose:** Acknowledge receipt of a delivered message or evidence record.
 
 ```json
@@ -850,7 +850,7 @@ The attachment carries the signed ETSI EN 319 522-3 XML. The QTSP QESeal is embe
 
 ---
 
-## 17. Normative Requirements — DIDComm over QTSP
+## 17. Normative Requirements - DIDComm over QTSP
 
 ### 17.1 QTSP Requirements
 
@@ -906,8 +906,8 @@ This part specifies how credential issuance and credential presentation are perf
 
 WACI-DIDComm defines two protocol families used here:
 
-- **Issue Credential 3.0** (`https://didcomm.org/issue-credential/3.0/`) — for issuing Verifiable Credentials from an Issuer EBW to a Holder EBW
-- **Present Proof 3.0** (`https://didcomm.org/present-proof/3.0/`) — for requesting and submitting Verifiable Presentations from a Holder EBW to a Verifier EBW
+- **Issue Credential 3.0** (`https://didcomm.org/issue-credential/3.0/`) - for issuing Verifiable Credentials from an Issuer EBW to a Holder EBW
+- **Present Proof 3.0** (`https://didcomm.org/present-proof/3.0/`) - for requesting and submitting Verifiable Presentations from a Holder EBW to a Verifier EBW
 
 ### 18.1 Transport and Encryption Model
 
@@ -915,8 +915,8 @@ The two DIDComm layers operate at different scopes and are independent of each o
 
 | Layer | Scope | Notes |
 |---|---|---|
-| Outer (`routing/2.0/forward`) | EBW ↔ own QTSP | QTSP acts as DIDComm mediator — routes by `body.next`, handles QERDS transport and evidence |
-| Inner (WACI message in `attachments`) | EBW ↔ remote EBW | JWE encrypted to recipient EBW's `keyAgreement` key — end-to-end, opaque to both QTSPs |
+| Outer (`routing/2.0/forward`) | EBW ↔ own QTSP | QTSP acts as DIDComm mediator - routes by `body.next`, handles QERDS transport and evidence |
+| Inner (WACI message in `attachments`) | EBW ↔ remote EBW | JWE encrypted to recipient EBW's `keyAgreement` key - end-to-end, opaque to both QTSPs |
 
 The QTSP treats the attachment as an opaque byte sequence. It does not parse, decrypt, or inspect it. The inner message is a standard WACI-DIDComm Encrypted Message [DIDCOMM] encrypted to the recipient EBW's `keyAgreement` key (resolved via Section 9). This is the standard DIDComm mediator pattern: the routing forward message carries an encrypted DIDComm message as an opaque attachment.
 
@@ -942,7 +942,7 @@ sequenceDiagram
     note over I_EBW,H_EBW: Thread ID T1 runs through all messages
 
     rect rgb(235, 245, 255)
-        note over I_EBW,H_EBW: Step 1 — offer-credential
+        note over I_EBW,H_EBW: Step 1 - offer-credential
         I_EBW->>I_EBW: Resolve did:euid of Holder<br>(Section 9)
         I_EBW->>I_EBW: Create inner DIDComm message:<br>issue-credential/3.0/offer-credential<br>encrypted to Holder EBW key
         I_EBW->>I_QTSP: routing/2.0/forward<br>{ next: Holder did, attachment: <encrypted offer> }
@@ -957,7 +957,7 @@ sequenceDiagram
     end
 
     rect rgb(235, 255, 235)
-        note over I_EBW,H_EBW: Step 2 — request-credential (key proof)
+        note over I_EBW,H_EBW: Step 2 - request-credential (key proof)
         H_EBW->>H_EBW: Generate key pair (WSCA/QSCD)<br>Sign PoP JWT with new private key<br>(see Section 19.1 for full structure)
         H_EBW->>H_EBW: Create inner DIDComm message:<br>issue-credential/3.0/request-credential<br>encrypted to Issuer EBW key
         H_EBW->>R_QTSP: routing/2.0/forward<br>{ next: Issuer did, attachment: <encrypted request> }
@@ -972,7 +972,7 @@ sequenceDiagram
     end
 
     rect rgb(255, 245, 235)
-        note over I_EBW,H_EBW: Step 3 — issue-credential
+        note over I_EBW,H_EBW: Step 3 - issue-credential
         I_EBW->>I_EBW: Issue SD-JWT-VC:<br>bind cnf.jwk = Holder public key
         I_EBW->>I_EBW: Create inner DIDComm message:<br>issue-credential/3.0/issue-credential<br>encrypted to Holder EBW key
         I_EBW->>I_QTSP: routing/2.0/forward<br>{ next: Holder did, attachment: <encrypted credential> }
@@ -981,7 +981,7 @@ sequenceDiagram
         R_QTSP->>H_EBW: <inner JWE><br>(forwarded attachment)
         H_EBW->>H_EBW: Decrypt inner message<br>Verify SD-JWT-VC issuer signature<br>Verify cnf.jwk matches generated key<br>Store credential
         H_EBW-->>R_QTSP: ebw/ack/1.0
-        note over R_QTSP: Create DeliveryToRecipient evidence<br>(triggered by ack — QESeal + QTS internal)
+        note over R_QTSP: Create DeliveryToRecipient evidence<br>(triggered by ack - QESeal + QTS internal)
         R_QTSP->>H_EBW: ebw/erds-evidence/1.0<br>{ DeliveryToRecipient, thid: T1 }
         R_QTSP-->>I_QTSP: Delivery confirmed (AS4)
         I_QTSP-->>I_EBW: ebw/erds-evidence/1.0<br>{ DeliveryToRecipient, thid: T1 }
@@ -994,14 +994,14 @@ At the end of a successful issuance exchange, each EBW holds the following evide
 
 | Evidence type | Direction | Held by |
 |---|---|---|
-| `SubmissionAcceptanceRejection` | Issuer → Holder (offer) | Issuer EBW |
-| `RelayAcceptanceRejection` | Issuer → Holder (offer) | Holder EBW |
-| `DeliveryToRecipient` | Issuer → Holder (offer) | Issuer EBW |
-| `SubmissionAcceptanceRejection` | Holder → Issuer (request) | Holder EBW |
-| `RelayAcceptanceRejection` | Holder → Issuer (request) | Issuer EBW |
-| `DeliveryToRecipient` | Holder → Issuer (request) | Holder EBW |
-| `SubmissionAcceptanceRejection` | Issuer → Holder (credential) | Issuer EBW |
-| `DeliveryToRecipient` | Issuer → Holder (credential) | Issuer EBW + Holder EBW |
+| `SubmissionAcceptanceRejection` | Issuer -> Holder (offer) | Issuer EBW |
+| `RelayAcceptanceRejection` | Issuer -> Holder (offer) | Holder EBW |
+| `DeliveryToRecipient` | Issuer -> Holder (offer) | Issuer EBW |
+| `SubmissionAcceptanceRejection` | Holder -> Issuer (request) | Holder EBW |
+| `RelayAcceptanceRejection` | Holder -> Issuer (request) | Issuer EBW |
+| `DeliveryToRecipient` | Holder -> Issuer (request) | Holder EBW |
+| `SubmissionAcceptanceRejection` | Issuer -> Holder (credential) | Issuer EBW |
+| `DeliveryToRecipient` | Issuer -> Holder (credential) | Issuer EBW + Holder EBW |
 
 All six transmission events in the credential lifecycle are recorded with qualified timestamps, giving a verifiable audit trail that is not available in OID4VCI-based issuance.
 
@@ -1025,7 +1025,7 @@ sequenceDiagram
     note over V_EBW,H_EBW: Thread ID T2 runs through all messages
 
     rect rgb(235, 245, 255)
-        note over V_EBW,H_EBW: Step 1 — request-presentation
+        note over V_EBW,H_EBW: Step 1 - request-presentation
         V_EBW->>V_EBW: Resolve did:euid of Holder (Section 9)
         V_EBW->>V_EBW: Create inner DIDComm message:<br>present-proof/3.0/request-presentation<br>{ presentation_definition, nonce }<br>encrypted to Holder EBW key
         V_EBW->>V_QTSP: routing/2.0/forward<br>{ next: Holder did, attachment: <encrypted request> }
@@ -1040,7 +1040,7 @@ sequenceDiagram
     end
 
     rect rgb(255, 245, 235)
-        note over V_EBW,H_EBW: Step 2 — presentation
+        note over V_EBW,H_EBW: Step 2 - presentation
         H_EBW->>H_EBW: Apply selective disclosure:<br>choose claims to reveal<br>Create VP: SD-JWT-VC~disclosure~kb-jwt<br>kb-jwt binds nonce + verifier DID
         H_EBW->>H_EBW: Create inner DIDComm message:<br>present-proof/3.0/presentation<br>{ vp_token, presentation_submission }<br>encrypted to Verifier EBW key
         H_EBW->>H_QTSP: routing/2.0/forward<br>{ next: Verifier did, attachment: <encrypted presentation> }
@@ -1049,7 +1049,7 @@ sequenceDiagram
         V_QTSP->>V_EBW: <inner JWE><br>(forwarded attachment)
         V_EBW->>V_EBW: Decrypt inner message<br>Verify SD-JWT-VC issuer signature<br>Verify kb-jwt (nonce + aud = verifier DID)<br>Verify presentation_submission<br>Extract disclosed claims
         V_EBW-->>V_QTSP: ebw/ack/1.0
-        note over V_QTSP: Create DeliveryToRecipient evidence<br>(triggered by ack — QESeal + QTS internal)
+        note over V_QTSP: Create DeliveryToRecipient evidence<br>(triggered by ack - QESeal + QTS internal)
         V_QTSP->>V_EBW: ebw/erds-evidence/1.0<br>{ DeliveryToRecipient, thid: T2 }
         V_QTSP-->>H_QTSP: Delivery confirmed (AS4)
         H_QTSP-->>H_EBW: ebw/erds-evidence/1.0<br>{ DeliveryToRecipient, thid: T2 }
@@ -1060,11 +1060,11 @@ sequenceDiagram
 
 | Evidence type | Direction | Held by |
 |---|---|---|
-| `SubmissionAcceptanceRejection` | Verifier → Holder (request) | Verifier EBW |
-| `RelayAcceptanceRejection` | Verifier → Holder (request) | Holder EBW |
-| `DeliveryToRecipient` | Verifier → Holder (request) | Verifier EBW |
-| `SubmissionAcceptanceRejection` | Holder → Verifier (presentation) | Holder EBW |
-| `DeliveryToRecipient` | Holder → Verifier (presentation) | Verifier EBW + Holder EBW |
+| `SubmissionAcceptanceRejection` | Verifier -> Holder (request) | Verifier EBW |
+| `RelayAcceptanceRejection` | Verifier -> Holder (request) | Holder EBW |
+| `DeliveryToRecipient` | Verifier -> Holder (request) | Verifier EBW |
+| `SubmissionAcceptanceRejection` | Holder -> Verifier (presentation) | Holder EBW |
+| `DeliveryToRecipient` | Holder -> Verifier (presentation) | Verifier EBW + Holder EBW |
 
 The `DeliveryToRecipient` evidence for the presentation records the moment the Verifier received the VP, establishing a qualified timestamped record of the presentation event.
 
@@ -1074,7 +1074,7 @@ The `DeliveryToRecipient` evidence for the presentation records the moment the V
 
 ### 21.1 QTSP Metadata Endpoint
 
-*Direction:* EBW → QTSP  
+*Direction:* EBW -> QTSP  
 *Method:* HTTPS GET  
 *Path:* `/.well-known/qtsp-configuration`
 
@@ -1107,7 +1107,7 @@ The response **MUST** be signed with a key from the QTSP's qualified certificate
 
 ### 21.2 Onboarding Endpoint
 
-*Direction:* EBW → QTSP IPS  
+*Direction:* EBW -> QTSP IPS  
 *Method:* HTTPS POST  
 *Path:* `/onboarding/start`
 
@@ -1152,13 +1152,13 @@ The QTSP responds with an OpenID4VP Authorization Request per WBCS-002. After su
 
 ### 21.3 Token Renewal Endpoint
 
-*Direction:* EBW → QTSP  
+*Direction:* EBW -> QTSP  
 *Method:* HTTPS POST  
 *Path:* Value of `token_endpoint` from QTSP metadata
 
 This endpoint is used by already-registered Subscribers to obtain a new access token by repeating OpenID4VP identity verification (Section 12.5). No DID registration occurs.
 
-**Step 1 — Start renewal:**
+**Step 1 - Start renewal:**
 
 *Path:* `{token_endpoint}/start`
 
@@ -1177,7 +1177,7 @@ This endpoint is used by already-registered Subscribers to obtain a new access t
 
 The QTSP responds with an OpenID4VP Authorization Request per WBCS-002. The EBW completes the VP Token presentation as in onboarding.
 
-**Step 2 — Response (after VP verification):**
+**Step 2 - Response (after VP verification):**
 
 **Response fields:**
 
@@ -1206,7 +1206,7 @@ The QTSP responds with an OpenID4VP Authorization Request per WBCS-002. The EBW 
 
 ### 21.4 DIDComm WebSocket Endpoint
 
-*Direction:* EBW → QTSP (upgrade), then bidirectional  
+*Direction:* EBW -> QTSP (upgrade), then bidirectional  
 *Method:* HTTP UPGRADE (WebSocket)  
 *Path:* Value of `didcomm_endpoint` from QTSP metadata  
 *Authentication:* `Authorization: Bearer <access_token>` on UPGRADE request
@@ -1241,7 +1241,7 @@ Sec-WebSocket-Version: 13
 
 ### 21.5 DIDComm HTTPS POST Endpoint
 
-*Direction:* EBW → QTSP (outbound messages)  
+*Direction:* EBW -> QTSP (outbound messages)  
 *Method:* HTTPS POST  
 *Path:* Value of `didcomm_endpoint` from QTSP metadata  
 
@@ -1276,7 +1276,7 @@ Content-Type: application/didcomm-encrypted+json
 
 ### 21.6 DIDComm Inbox Polling Endpoint
 
-*Direction:* EBW → QTSP  
+*Direction:* EBW -> QTSP  
 *Method:* HTTPS GET  
 *Path:* `{didcomm_endpoint}/inbox`
 
@@ -1322,7 +1322,7 @@ Content-Type: application/didcomm-encrypted+json
 
 ### 21.7 DIDComm Inbox Acknowledgement
 
-*Direction:* EBW → QTSP  
+*Direction:* EBW -> QTSP  
 *Method:* HTTPS DELETE  
 *Path:* `{didcomm_endpoint}/inbox/{message_id}`
 
@@ -1415,11 +1415,11 @@ An EBW implementation **MAY** conform to multiple conformance classes simultaneo
 
 **Key rotation:** Subscriber key rotation invalidates the existing DID Document. The EBW MUST generate a new key pair and re-register via onboarding. The QTSP MUST update the discovery infrastructure entry within 24 hours. Any cached DID Documents referencing the old key MUST be discarded.
 
-**Post-quantum readiness:** The encryption algorithms specified in Section 13.4 (ECDH-ES family, A256GCM) are not post-quantum safe. Implementations MUST use modular cryptographic interfaces to permit future migration to ML-KEM or equivalent post-quantum key encapsulation mechanisms when standardised for DIDComm. This is consistent with the WE BUILD ADR requirement for a PQC-safe path before 2035.
+**Post-quantum readiness:** The encryption algorithms specified in Section 13.4 (ECDH-ES family, A256GCM) are not post-quantum safe. Implementations MUST use modular cryptographic interfaces to permit future migration to ML-KEM or equivalent post-quantum key encapsulation mechanisms when standardized for DIDComm. This is consistent with the WE BUILD ADR requirement for a PQC-safe path before 2035.
 
 **OpenID4VP reuse attacks:** The nonce in each OpenID4VP challenge MUST be unique per session to prevent replay of a prior presentation.
 
-**Credential content privacy from QTSP:** WACI-DIDComm payloads (credential offers, requests, issued credentials, and presentations) are encrypted to the final recipient EBW's key and MUST be treated as opaque by both QTSPs. A QTSP MUST NOT attempt to decrypt, log, or inspect the inner payload of a WACI-DIDComm transmission. The QERDS evidence records the *fact* of transmission with a qualified timestamp — not the credential content.
+**Credential content privacy from QTSP:** WACI-DIDComm payloads (credential offers, requests, issued credentials, and presentations) are encrypted to the final recipient EBW's key and MUST be treated as opaque by both QTSPs. A QTSP MUST NOT attempt to decrypt, log, or inspect the inner payload of a WACI-DIDComm transmission. The QERDS evidence records the *fact* of transmission with a qualified timestamp - not the credential content.
 
 **PoP JWT replay:** The `proof_of_possession` JWT in `request-credential` MUST be single-use. An Issuer MUST reject any second `request-credential` message presenting the same nonce, even if the PoP JWT signature is valid.
 
@@ -1455,7 +1455,7 @@ An EBW implementation **MAY** conform to multiple conformance classes simultaneo
 
 [RFC 9449] Fett, D. et al. (2023) *OAuth 2.0 Demonstrating Proof of Possession (DPoP)*. IETF RFC 9449. Available at: https://datatracker.ietf.org/doc/html/rfc9449
 
-[ISO-6523] ISO (1998) *Information technology — Structure for the identification of organisations and organisation parts*. ISO 6523.
+[ISO-6523] ISO (1998) *Information technology - Structure for the identification of organizations and organization parts*. ISO 6523.
 
 [WACI-DIDCOMM] Decentralised Identity Foundation (2023) *WACI-DIDComm: Wallet and Credential Interaction over DIDComm*. DIF Working Group. Available at: https://identity.foundation/waci-didcomm/
 
