@@ -227,9 +227,7 @@ Two standalone service obligations widen access to the channel:
 
 The Commission establishes, operates and maintains a **European Digital Directory** as the trusted source of information for EBW owners. It takes the form of a web application with two interfaces: a machine-readable API for system-to-system communication, and a secure web portal for authenticated and authorised wallet users.
 
-For each owner, providers submit at least: the official name (as in the national register of the country of establishment or habitual residence), the unique identifier, the digital address(es), and the country of establishment. Public sector bodies that are not EBW owners are also listed, with the same categories of information. Keeping the Directory accurate is a chain of duties: providers verify owner information at least **every 72 hours** (where applicable using mechanisms of the relevant authentic sources), and communicate changes to the Commission within **one working day** of receipt. These arrangements should not indirectly create a requirement for economic operators to update the information. Access to the Directory is limited to wallet owners, wallet users, providers and Member State authorities. The Directory relies on information made available by business registers (including through BRIS) without duplicating it, and must comply with data-protection principles such as data minimisation.
-
-**_WE BUILD implementation note:_** TODO WHO DOES THIS?!?!? Trust group issue? Web - should be easy, do we have anyone?_
+For each owner, providers submit at least: the official name (as in the national register of the country of establishment or habitual residence), the unique identifier, the digital address(es), and the country of establishment. Public sector bodies that are not EBW owners are also listed, with the same categories of information. The Directory relies on information made available by business registers (including through BRIS) without duplicating it, and must comply with data-protection principles such as data minimisation.
 
 ### Access control mechanism
 
@@ -273,7 +271,7 @@ Only providers included in the Commission's public, machine-readable **list of a
 
 # Obligations on public sector bodies
 
-Public sector bodies — including Union entities — must enable economic operators to use the wallet's core functionalities to **identify and authenticate, sign or seal, submit documents, and send or receive notifications**, for the purpose of meeting a reporting obligation or fulfilling an administrative procedure. For submissions and notifications they must themselves have EBWs including the QERDS channel. Public sector bodies keep flexibility on *how* they accept the wallets, may maintain existing interfaces and digital tools, and should avoid disproportionate burdens especially on SMEs. _TODO - shall in WB scope? _
+Public sector bodies must enable economic operators to use the wallet's core functionalities to **identify and authenticate, sign or seal, submit documents, and send or receive notifications**, for the purpose of meeting a reporting obligation or fulfilling an administrative procedure. For submissions and notifications they shall themselves have EBWs including the QERDS channel. Public sector bodies keep flexibility on *how* they accept the wallets, may maintain existing interfaces and digital tools, and should avoid disproportionate burdens especially on SMEs. 
 
 # Current challenges and open topics
 
@@ -299,20 +297,19 @@ The following topics are known to be unsettled but is needed for the WE BUILD us
 
 **What is known.** Authorisation logic must be interoperable across Member States, mappings must be verifiable, auditable, revocable and traceable, and conflicts must be prevented in real time. Authorisations are technical and do not affect legal powers of attorney; compatibility with the EU digital power of attorney is expected. The exchange of authorisation data with national registers is named as an implementing-act topic.
 
-**What is open.** There is no common authorisation or mandate credential yet, no agreed policy language, and no established mapping between technical wallet permissions and legal representation under national law. That mapping will differ per Member State and per procedure. _TODO; WB Scope?_
+**What is open.** There is no common authorisation or mandate credential yet, no agreed policy language, and no established mapping between technical wallet permissions and legal representation under national law. That mapping will differ per Member State and per procedure. 
 
 ## Owner-issued ("primary source") attestations
 
 **What is known.** Attestations can be issued, by the provider on behalf of the owner, for data for which the owner is the primary source, and linked into verifiable chains.
 
 **What is open.** Whether the owner, the provider or a separate attestation provider is the legal issuer; who appears in the issuer field; whether the attestation asserts only that the owner declared the data or that it was verified; which assurance, status and revocation rules apply; and whether this issuance is a trust service. 
-_What is the WB take on this? TODO_
 
 ## QERDS designation, multiplicity and resilience
 
 **What is known.** Requirements on the protocol and the standards for compliant implementations of "the specific" QERDS serving as the mandatory channel, are many but should be open royalty-free standards, end-to-end encryption, and procedures for continuous availability, redundancy and fallback. The EP rapporteur allows one or more QERDS.
 
-**What is open.** TODO: What will we use in WB?
+**What is open.** Whether multiple designated services will coexist; provider selection; routing and address resolution; portability between QERDS providers; and whether every wallet must be preconfigured with more than one service. For Member States with an established national delivery channel that is not a QERDS, the coexistence of that channel with a designated EU-level QERDS is a further open question.
 
 ## Separation of personal and professional identity: the "Employee Wallet" idea
 
@@ -321,3 +318,15 @@ _What is the WB take on this? TODO_
 **Current ideas.** One market response is a companion mobile application for employees — often called an **"Employee Wallet"** — that works together with the (typically web-based) Business Wallet of the organisation. The idea: the organisation issues professional credentials (for example a verified-employee attestation with name, employee ID and department) from its Business Wallet into the employee's companion wallet; the employee then uses these professional credentials to authenticate to the EBW and to act in their professional role, while their personal EUDI Wallet and personal credentials stay separate. This separates professional life from private life and keeps the employment relationship, not the private identity, at the centre of business transactions. Such solutions already exist in the market: at least one WE BUILD participant offers an organisational Business Wallet that issues and verifies credentials such as employee IDs, together with a companion wallet for individuals that manages personal and professional credentials in one secure app while keeping them distinguishable [\[8\]](#references). The broader rationale for separating "private individual" and "employee" credential contexts is also discussed in the wider identity community [\[9\]](#references).
 
 **What is open.** The Employee Wallet is a market concept, not something defined in the draft Regulation. Open questions include: who issues and revokes employee credentials and how their lifecycle follows the employment relationship (for example revocation when employment ends); which assurance level such an app can reach and whether it qualifies as "an alternative authentication mechanism recognised as equivalent" to a notified eID means at level "substantial" ; how it relates to the wallet's role and authorisation model; and device policy (private versus corporate devices).
+
+# References
+
+1. European Commission, Proposal for a Regulation on the establishment of European Business Wallets, COM(2025) 838, 19 November 2025 — [EUR-Lex](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex:52025PC0838); accompanying Staff Working Document [SWD(2025) 837](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex:52025SC0837).
+2. Council of the European Union, General approach on the proposal, doc [10346/26, 10 June 2026](https://data.consilium.europa.eu/doc/document/ST-10346-2026-INIT/en/pdf); [press release, 9 June 2026](https://www.consilium.europa.eu/en/press/press-releases/2026/06/09/european-business-wallets-council-adopts-negotiating-position/).
+3. European Parliament, ITRE rapporteur's draft report [PE785.244](https://www.europarl.europa.eu/doceo/document/ITRE-PR-785244_EN.pdf), 20 March 2026; see also the WE BUILD briefing `itre-draft-report-ebw-briefing.md`.
+4. European Parliament, procedure file [2025/0358(COD)](https://oeil.europarl.europa.eu/oeil/en/procedure-file?reference=2025%2F0358%28COD%29) and [Legislative Train entry](https://www.europarl.europa.eu/legislative-train/carriage/european-business-wallet/report?sid=10001).
+5. European Economic and Social Committee, opinion INT/1110 on the proposal, adopted 18 March 2026 — [EESC page](https://www.eesc.europa.eu/en/our-work/opinions-information-reports/opinions/european-business-wallet).
+6. EU Digital Identity Wallet large-scale pilots — [EWC pilot overview](https://ec.europa.eu/digital-building-blocks/sites/spaces/EUDIGITALIDENTITYWALLET/pages/920064565/LSP-EWC) and [WE BUILD Consortium](https://www.webuildconsortium.eu/).
+7. Biometric Update, [EU can rein in AI agents with EUDI Wallets and business wallets: WE BUILD](https://www.biometricupdate.com/202603/eu-can-rein-in-ai-agents-with-eudi-wallets-and-business-wallets-we-build), March 2026 (on the WE BUILD non-paper).
+8. Credenco — [company site](https://www.credenco.com/?lang=en), [Business Wallet documentation](https://docs.acc.credenco.com/), and [monthly update, January 2026](https://www.credenco.com/post/monthly-update-and-looking-ahead?lang=en) (companion wallet for personal and professional credentials; WE BUILD Business Wallet workshop and Integration Test Bed participation).
+9. Spherity, [Verifiable Credentials in 'Private Individual' vs 'Employee' contexts (x2i vs x2e)](https://medium.com/spherity/verifiable-credentials-in-private-individual-vs-employee-contexts-x2i-vs-x2e-5b8ac36f5b9f); FIDES community, [Organizational and business wallets explained](https://fides.community/topics/business-wallets/).
