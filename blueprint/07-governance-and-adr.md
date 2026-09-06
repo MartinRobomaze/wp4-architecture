@@ -68,10 +68,6 @@ graph TB
     SpecEfforts["Specification efforts"] -- "New wallet interface definitions" --> CS
     TestDev["Test development"] -- "New version test cases" --> ITB
 ```
-### Pre-flight CS
-The consortium sometimes requires fast and lightweight conformance specifications in order to start testing. For some areas the standardization situation enables testing to proceed with a minimal "pre-flight" CS that references existing standards.
-
-The expectation is that the result if testing is fed back into the CS process in WP4 so that a better and more informed CS can be produced as the result of the first round of testing.
 
 ## Document Lifecycle
 WE BUILD moves fast, and our documentation needs to keep up. We don't wait for "perfect" documents; we iterate as the use cases mature.
