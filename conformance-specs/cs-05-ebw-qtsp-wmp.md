@@ -230,7 +230,10 @@ The QTSP **MUST** serve a WMP configuration document at `/.well-known/wmp-config
   "mls_key_packages": "https://qerds.qtsp.example/.well-known/mls-key-packages",
   "onboarding_endpoint": "https://qerds.qtsp.example/onboarding",
   "qtsp_id": "ebcore:iso6523:0204:DE123456789",
-  "trusted_list_url": "https://eidas.ec.europa.eu/efda/tl/browser/"
+  "trusted_list_url": "https://eidas.ec.europa.eu/efda/tl/browser/",
+  "erds": {
+    "consignment_modes": ["basic", "consented", "consented_signed"]
+  }
 }
 ```
 
@@ -248,6 +251,7 @@ The QTSP **MUST** serve a WMP configuration document at `/.well-known/wmp-config
 | `onboarding_endpoint` | MUST | URI to initiate onboarding (Section 8) |
 | `qtsp_id` | MUST | The QTSP's own `ebcore` identifier |
 | `trusted_list_url` | SHOULD | The Trusted List under which the QTSP's qualified status is published |
+| `erds.consignment_modes` | MUST | **MUST** advertise all of `basic`, `consented`, `consented_signed` ([WMP-CORE] §7.5.1.1) |
 
 The configuration document **MUST** be served either over TLS with a certificate chaining to the QTSP's qualified certificate, or as a signed JWT with `Content-Type: application/jwt` signed by a key from the QTSP's TSL entry. The EBW **MUST** verify the QTSP's qualified status against the EU Trusted List before onboarding, and **MUST NOT** onboard to a QTSP whose qualified status cannot be established. This requirement stands independently of `trusted_list_url`, which is a convenience hint only.
 
@@ -634,6 +638,8 @@ The QTSP **MUST**:
 - Send exactly one terminal status per message: `delivered`, `expired`, or `dropped`.
 - Generate `delivery_expired` evidence when a queued message expires, and `retrieval_timeout` evidence when the recipient does not retrieve within the retention period.
 
+[WMP-CORE] §5.3.1 defines the wire-level mechanics for this case: when the recipient's queue is at `max_queued`, the QTSP rejects the message with error `-31014` (Queue full), and the terminal `wmp.message.status` sent to the sender is `dropped`. Neither of those is itself evidence — `-31014` is a JSON-RPC error and `dropped` is a delivery-status notification, and a QTSP **MUST NOT** treat either as a substitute for an ERDS evidence record. A QTSP that returns `-31014` **MUST** also reject the relay and generate `relay_rejected` evidence (Section 15.2), with `EventReasons` set to `quota_exceeded` ([WMP-EVIDENCE] §4.2.1; Section 15.4) — the same evidentiary treatment `submission_rejected` gets for policy/quota/format rejections at the origin (Section 13). This keeps queue exhaustion visible in the Sender QTSP's evidence chain instead of indistinguishable from a service outage.
+
 An EBW **MUST NOT** set `expires_at` shorter than the QERDS service's minimum retention without understanding that doing so converts a slow delivery into a non-delivery, with corresponding evidence.
 
 ---
@@ -715,12 +721,14 @@ The Sender EBW **MUST**:
 - MLS-encrypt the content (Section 10.1).
 - Include a detached JWS `signature` over the content object ([WMP-CORE] §5.4), signed with the key bound to its Subscriber certificate. This is the sender's non-repudiable attestation of what it submitted; the QTSP's evidence attests only that it received it.
 - Include `identity_assertions` ([WMP-CORE] §5.6) on the first message of a correspondence, and on every subsequent message where per-message legal identity binding is required. The assertion **MUST** be of type `verifiable_presentation` and **MUST** present the Subscriber's **EBWOID** (European Business Wallet Organisation Identity Document), disclosing at least the organisation identifier corresponding to the sender's `ebcore` identifier. Per [WMP-CORE] §5.6 the presentation binds to the session via `audience` and to the session challenge via `nonce`, and **SHOULD** carry an `eidas_lote` trust hint. An assertion sent once is valid for the session lifetime.
+- Set `consignment_mode` ([WMP-CORE] §3.5) to `consented` or `consented_signed` where the use case requires the recipient to explicitly accept or reject content, or to produce a signed acceptance record, before it is presented. Where `consignment_mode` is absent, this profile's default is `basic`.
 
 The QTSP **MUST**:
 - Verify the sender's signature before accepting. Reject with `-31010` (Signature invalid) on failure.
 - Verify `wmp.timestamp` is within its clock skew tolerance. Reject with `-31011` on failure.
 - Compute `original_content_hash` over the JCS-canonicalized content object exactly as the signature payload is constructed ([WMP-EVIDENCE] §4.3), so that the evidence and the sender's signature cover the same bytes.
 - Generate `submission_rejected` evidence — not a bare JSON-RPC error — where it rejects a well-formed submission on policy, quota, or format grounds. A rejection that produces no evidence is indistinguishable to the Subscriber from a service failure.
+- Where `consignment_mode` is set, verify it appears in the Recipient QTSP's advertised `erds.consignment_modes` (Section 7.2; [WMP-CORE] §7.5.1.1) before relaying, and reject with `-31005` (Capability not supported) if it does not. Since this profile requires every QTSP to advertise all three modes, this check only ever fails against a non-conforming Recipient QTSP.
 
 ## 14. Message Reception Flow
 
@@ -773,12 +781,17 @@ sequenceDiagram
 
 The EBW **MUST NOT** present content as originating from a named legal entity on the strength of the `wmp.sender` field alone — that field is routing metadata, and its binding to a legal identity is exactly what the EBWOID assertion establishes.
 
+**Consignment mode (`consented`, `consented_signed`).** [WMP-CORE] §3.5 describes `consented` as gating content on explicit accept/reject before it becomes accessible. In this profile that gate is the existing `wmp.message.ack` step above: the Recipient EBW **MUST NOT** present content to a user or downstream system, nor send `wmp.message.ack` with status `processed`, until the acceptance decision has actually been made — the `received` ack already confirms delivery; it is the `processed` (or explicit rejection) ack that carries consent. No separate pre-delivery notification exchange is required, because the ciphertext reaching the EBW is not itself "access" to the content.
+
+`consented_signed` adds one requirement on top of `consented`: the Recipient EBW **MUST** sign the `wmp.message.ack` that carries its accept or reject decision — a detached JWS `signature` in its `wmp` metadata ([WMP-CORE] §5.4), with the key bound to its Subscriber certificate. This is the "signed acknowledgment" [WMP-CORE] §3.5 requires, and it is the recipient-side counterpart to the sender's submission signature (Section 13): the QTSP's `acceptance_confirmed`/`acceptance_rejected` evidence attests that it observed the decision; the recipient's own signature is what makes the decision itself non-repudiable. The Recipient QTSP **MUST** verify this signature before generating `acceptance_confirmed` or `acceptance_rejected` evidence when `consented_signed` was negotiated, and **MUST** reject an unsigned or invalidly-signed decision ack with `-31010` rather than generating evidence for a decision it cannot attribute.
+
 The Recipient EBW **MUST**:
 - Verify the sender's detached JWS signature over the content, and reject the message if it does not verify.
 - Verify each `relay_chain` entry's signature ([WMP-CORE] §5.7), and surface any relay in the chain it does not recognise rather than silently accepting the route.
 - Send `wmp.message.ack` with status `received` on successful decryption and verification.
 - Send `wmp.message.ack` with status `processed` on explicit user or system acceptance, where the use case requires an acceptance record.
 - Send `wmp.message.ack` with status `failed` where decryption or verification fails, so that the QTSP generates `delivery_failed` evidence rather than leaving the correspondence unresolved.
+- Sign the `processed`/rejection `wmp.message.ack` per [WMP-CORE] §5.4 where `consignment_mode` is `consented_signed`.
 
 ## 15. Evidence
 
@@ -808,7 +821,7 @@ A QTSP **MUST** generate one ERDS evidence record for each WMP evidence event, w
 | `submission_accepted` | `SubmissionAcceptance` | Sender QTSP | Submission accepted, before relay |
 | `submission_rejected` | `SubmissionRejection` | Sender QTSP | Submission rejected on policy/quota/format |
 | `relay_accepted` | `RelayAcceptance` | Recipient QTSP | Message accepted from previous hop |
-| `relay_rejected` | `RelayRejection` | Recipient QTSP | Message rejected from previous hop |
+| `relay_rejected` | `RelayRejection` | Recipient QTSP | Message rejected from previous hop, including inability to admit it under exhausted `offline` queue capacity (Section 11.2) |
 | `relay_forwarded` | `ContentConsignment` | Sender QTSP | Message forwarded to next hop |
 | `delivery_attempted` | `ConsignmentNotification` | Recipient QTSP | Recipient offline; message queued and notification raised |
 | `delivery_confirmed` | `ContentHandover` | Recipient QTSP | Content handed over to the EBW endpoint |
@@ -821,7 +834,14 @@ A QTSP **MUST** generate one ERDS evidence record for each WMP evidence event, w
 
 Three WMP events map to `ContentHandoverFailure`, because ETSI models them as a single event — handover did not occur — distinguished by cause rather than by identifier. `EventReasons`, which Section 15.4 requires on every negative record, is what keeps a permanent failure, an expiry in the sender's queue, and a recipient that never retrieved distinguishable. The generating party disambiguates them further: `delivery_expired` originates at the Sender QTSP, the other two at the Recipient QTSP.
 
-`ConsignmentAcceptance` and `ConsignmentRejection` arise only where the consignment mode requires the recipient to accept or reject the content — `http://uri.etsi.org/19522/v1#/consignment/consent` in [ERDS-EVIDENCE-SCHEMA]. Under `http://uri.etsi.org/19522/v1#/consignment/basic` a QERDS exchange completes at `ContentAccessTracking`, and no acceptance record arises.
+`ConsignmentModeType` in [ERDS-EVIDENCE-SCHEMA] defines four values; the table below gives this profile's mapping for each, in terms of [WMP-CORE] §3.5's `consignment_mode` field.
+
+| Consignment mode | ETSI `ConsignmentModeType` URI | [WMP-CORE] `consignment_mode` | Evidence generated | Support |
+|---|---|---|---|---|
+| Basic | `.../consignment/basic` | `basic` (default when `consignment_mode` is absent) | Exchange completes at `ContentAccessTracking` (`retrieval_confirmed`); no acceptance record arises | Supported |
+| Consent | `.../consignment/consent` | `consented` | `acceptance_confirmed` / `acceptance_rejected`, on `wmp.message.ack` status `processed` / explicit rejection (Section 14) | Supported |
+| Signed | `.../consignment/signed` | `consented_signed` | Same events as Consent, except the underlying `wmp.message.ack` additionally carries the recipient's own detached JWS over its decision (Section 14) — no new event type, an added property of the same evidence | Supported |
+| Other | `.../consignment/other` | No [WMP-CORE] counterpart | — | **Not supported.** Undefined by construction — ETSI reserves it for bilaterally-agreed semantics with no fixed content to map against. A deployment negotiating it outside this profile is responsible for defining its own event mapping. |
 
 A QTSP **MUST** support all thirteen event types. [WMP-EVIDENCE] Section 9.2 requires support for all event types in its Sections 3.1–3.5 for ERDS conformance; this table is the QERDS-specific reading of that requirement.
 
@@ -855,12 +875,7 @@ Evidence is notified with `wmp.evidence.notify` per [WMP-EVIDENCE] Section 4.1, 
       "sender": "x509:san:dns:qerds.qtsp.example",
       "timestamp": "2026-07-16T10:15:31Z",
       "timestamp_token": "<base64url-encoded RFC 3161 TimeStampToken from qualified TSA>",
-      "signature": {
-        "alg": "ES256",
-        "kid": "x509:san:dns:qerds.qtsp.example#evidence-key-1",
-        "value": "<base64url-encoded detached signature>",
-        "x5c": ["<base64-encoded DER qualified certificate>", "<intermediate>", "<root>"]
-      }
+      "signature": "<BASE64URL(protected header)>..<BASE64URL(signature)>"
     },
     "evidence": {
       "evidence_id": "evi-7f8e9d0c-b1a2-43e5-8f6d-7e8a9b0c1d2e",
@@ -930,6 +945,8 @@ Per [WMP-EVIDENCE] Section 9.2, ERDS conformance requires qualified signatures a
 2. Produce that signature as a **qualified electronic seal** under [EIDAS], with the QTSP's qualified certificate resolvable from the JAdES header.
 3. Include the qualified TSA's RFC 3161 token, reaching **JAdES-B-T** per [EN-319-182-1].
 
+**JAdES-B-T** is the form at issuance. Section 15.8 requires extending each record to **JAdES-B-LTA** over its retention period, before the certificate chain or algorithms backing the existing seal are no longer safe to rely on.
+
 The `flattenedJson` and `generalJson` forms permitted by [ERDS-EVIDENCE-SCHEMA] **MUST NOT** be used on the EBW–QTSP leg. `signed_evidence` is a compact serialization field; the other two forms would not survive it.
 
 The two signatures are not redundant. The notification's JWS authenticates a WMP message in a WMP session and is verified by a WMP implementation. The record's JAdES seal is what an auditor or a court verifies years later, with no WMP session, no relay, and possibly no WMP implementation in existence. Only the latter needs to be a qualified seal in the eIDAS sense; only the former needs to be intelligible to a relay.
@@ -982,7 +999,11 @@ Every record carries a qualified timestamp and binds to the content hash, giving
 
 The QTSP **MUST** retain ERDS evidence records for at least 10 years ([WMP-EVIDENCE] §6.3 and §9.2) and **MUST** provide the evidence repository API (Section 19.4). Retention applies to the JAdES-signed ERDS record — the artefact with legal weight — not merely to the notification summary fields.
 
-Per [WMP-EVIDENCE] Section 8.5, evidence signatures must remain verifiable across that period. The QTSP **MUST** archive the full X.509 chains used for verification and **SHOULD** re-timestamp evidence with current algorithms before the algorithms in use are deprecated. Section 21 addresses why this matters more for evidence than for the MLS layer.
+Per [WMP-EVIDENCE] Section 8.5, evidence signatures must remain verifiable across that period. Archiving the certificate chain and re-timestamping the algorithm are independent MUSTs, because they protect against different failures: an archived chain preserves the trust path a verifier walks, but it does not rescue a signature algorithm that has become forgeable — recomputing that proof is exactly what the archived chain cannot do. Section 21 addresses why this matters more for evidence than for the MLS layer.
+
+The QTSP **MUST**:
+- Archive the full X.509 chains used for verification.
+- Extend every ERDS evidence record to **JAdES-B-LTA** by adding a JAdES archive timestamp (`arcTst`, [EN-319-182-1]) before either the signature/hash algorithm backing its existing seal is no longer recommended for use (per [TS-119-312] or an equivalent national cryptographic suite recommendation), or the certificate chain validating that seal is due to expire — whichever comes first. Absent an earlier deprecation trigger, this **MUST** happen at least every 5 years as a backstop.
 
 ## 16. Method Reference
 
@@ -1124,29 +1145,29 @@ The QTSP **MUST**:
 19. Populate `EventReasons` on every rejection, failure, non-delivery, and non-retrieval record.
 20. Sign every `relay_chain` entry it appends.
 21. Deliver `retrieval_confirmed` and `acceptance_confirmed` evidence to the Recipient EBW as well as the Sender EBW.
-22. Queue messages for disconnected EBWs for at least 30 days, with `status_notifications` enabled.
-23. Retain evidence for at least 10 years and provide the evidence repository API.
+22. Queue messages for disconnected EBWs for at least 30 days with `status_notifications` enabled; where it cannot admit a message under exhausted `offline` queue capacity, reject it with `-31014` and terminal status `dropped` ([WMP-CORE] §5.3.1), and in every such case also generate `relay_rejected` evidence with `EventReasons: quota_exceeded` (Section 11.2) — the error and status notify the sender; the evidence is what makes the non-delivery provable.
+23. Retain evidence for at least 10 years and provide the evidence repository API; archive the full certificate chains used to verify evidence signatures, and extend every ERDS evidence record to JAdES-B-LTA by algorithm or certificate deprecation, at least every 5 years absent an earlier trigger (Section 15.8).
 24. Verify the sender's detached JWS signature on every submission, rejecting with `-31010` on failure.
 25. Update the SMP entry within 24 hours of any certificate rotation or endpoint change.
+26. Advertise `basic`, `consented`, and `consented_signed` in `erds.consignment_modes` (Section 7.2), and verify a requested `consignment_mode` against the Recipient QTSP's advertised support before relaying (Section 13).
+27. Verify the recipient's signature on a `consented_signed` decision ack before generating `acceptance_confirmed` or `acceptance_rejected` evidence, rejecting an unsigned or invalid one with `-31010` (Section 14).
 
 The QTSP **MUST NOT**:
 
 1. Generate `retrieval_confirmed` evidence before receiving `wmp.message.ack` from the Recipient EBW.
-2. Accept `auth.type` of `bearer` or `opaque` on a QERDS session.
-3. Accept a session with `security.mode` of `tls` or `mls-optional`.
-4. Attempt to decrypt, log, or inspect the MLS ciphertext.
-5. Register a Subscriber or issue a certificate without a successfully verified OpenID4VP presentation whose organisation identifier matches the requested `subscriber_id`.
-6. Serve an expired KeyPackage or an expired SMP-registered certificate.
-7. Place an ERDS evidence record, or any other evidence format, in `evidence.details` of a `wmp.evidence.notify` message, or otherwise add fields to a WMP message.
-8. Populate `UserContentInfo.ComposingParts` or `UserContentInfo.PartsInfo` with data derived from message plaintext.
-9. Use the `flattenedJson` or `generalJson` JAdES forms for `signed_evidence`.
+2. Accept a session with `auth.type` of `bearer` or `opaque`, or with `security.mode` of `tls` or `mls-optional`.
+3. Attempt to decrypt, log, or inspect the MLS ciphertext.
+4. Register a Subscriber or issue a certificate without a successfully verified OpenID4VP presentation whose organisation identifier matches the requested `subscriber_id`.
+5. Serve an expired KeyPackage or an expired SMP-registered certificate.
+6. Place an ERDS evidence record, or any other evidence format, in `evidence.details` of a `wmp.evidence.notify` message, or otherwise add fields to a WMP message.
+7. Populate `UserContentInfo.ComposingParts` or `UserContentInfo.PartsInfo` with data derived from message plaintext.
+8. Use the `flattenedJson` or `generalJson` JAdES forms for `signed_evidence`.
 
 The QTSP **SHOULD**:
 
 1. Use DNSSEC-validated resolvers for BDXL lookups.
 2. Implement reconnection deduplication using JSON-RPC message `id` fields.
 3. Set `previous_evidence_id` on each evidence record to chain the message lifecycle.
-4. Re-timestamp archived evidence before the signing algorithms in use are deprecated.
 
 ### 17.2 EBW Requirements
 
@@ -1160,23 +1181,23 @@ The EBW **MUST**:
 6. Verify a recipient's KeyPackage credential — X.509 chain and SAN URI — before adding it to an MLS group.
 7. Publish fresh MLS KeyPackages before the previous set expires.
 8. Perform an MLS key update after every 100 messages or every hour, whichever comes first.
-9. Include a detached JWS signature over the content of every submission.
-10. Include `identity_assertions` presenting its EBWOID on the first message of a correspondence, and wherever per-message legal identity binding is required (Section 13).
-11. Verify the sender's signature, the `identity_assertions`, and the `relay_chain` signatures on every received message before presenting content, including that the EBWOID's organisation identifier matches `wmp.sender` (Interface 4, Section 14).
-12. Send `wmp.message.ack` with the appropriate status on receipt, acceptance, or failure.
-13. Verify every evidence notification's signature, timestamp token, and content hash before accepting it (Section 15.5).
-14. Acknowledge every evidence notification with `wmp.evidence.ack` and store it durably against its `original_message_id`.
-15. Verify the `jadesSignature` and the signer's qualified status on every ERDS evidence record it retrieves, and confirm the record agrees with the notification it holds (Section 15.5).
-16. Close a session and refrain from submitting content where the QTSP's session create result omits the `evidence` capability.
-17. Support the HTTPS transport.
+9. Include, on every submission, a detached JWS signature over the content; and include `identity_assertions` presenting its EBWOID on the first message of a correspondence, and wherever per-message legal identity binding is required (Section 13).
+10. Verify the sender's signature, the `identity_assertions`, and the `relay_chain` signatures on every received message before presenting content, including that the EBWOID's organisation identifier matches `wmp.sender` (Interface 4, Section 14).
+11. Send `wmp.message.ack` with the appropriate status on receipt, acceptance, or failure.
+12. Verify every evidence notification's signature, timestamp token, and content hash before accepting it (Section 15.5).
+13. Acknowledge every evidence notification with `wmp.evidence.ack` and store it durably against its `original_message_id`.
+14. Verify the `jadesSignature` and the signer's qualified status on every ERDS evidence record it retrieves, and confirm the record agrees with the notification it holds (Section 15.5).
+15. Close a session and refrain from submitting content where the QTSP's session create result omits the `evidence` capability.
+16. Support the HTTPS transport.
+17. Set `consignment_mode` to `consented` or `consented_signed` where the use case requires the recipient's explicit acceptance, or a signed acceptance record, before content is presented (Section 13).
+18. As recipient, withhold `wmp.message.ack` status `processed` until an actual accept/reject decision is made, and sign that ack per [WMP-CORE] §5.4 where `consignment_mode` is `consented_signed` (Section 14).
 
 The EBW **SHOULD**:
 
 1. Support the WebSocket transport where it is a server-side or always-on deployment.
 2. Use `wmp.session.resume` rather than creating a new session after transport loss.
 3. Cache `wmp.resolve` results until `valid_until`, and never beyond.
-4. Retrieve and durably store the ERDS evidence record for every evidence notification it receives, rather than relying on the notification alone. The notification is a message about an event; the ERDS record is the artefact that will still be verifiable, and admissible, in ten years.
-5. Retain evidence records for at least as long as the underlying transaction's legal relevance.
+4. Retrieve and durably store the ERDS evidence record for every evidence notification it receives, rather than relying on the notification alone — the notification is a message about an event; the ERDS record is the artefact that will still be verifiable, and admissible, in ten years — and retain it for at least as long as the underlying transaction's legal relevance.
 
 ---
 
@@ -1447,7 +1468,7 @@ The considerations in [WMP-CORE] Section 8, [WMP-MLS] Section 7, [WMP-EDELIVERY]
 
 The urgency is asymmetric, and the asymmetry matters. MLS ciphertext is ephemeral and forward-secret; a future quantum adversary recovering a 2026 epoch key learns the content of messages that are by then years stale — assuming it recorded the ciphertext at the time. **Evidence signatures are the opposite.** They are retained for 10 years by mandate, are designed to be verified by third parties long after issuance, and are exactly the artefacts whose forgeability would undermine the service's legal standing. A signature that becomes forgeable in year 8 of its retention period retroactively devalues every record it protects. The JAdES seal on the ERDS evidence record (Section 15.5) **SHOULD** therefore move to hybrid or PQC algorithms ahead of the MLS layer, not behind it ([WMP-MLS] §8.5, [WMP-EVIDENCE] §8.5). Of the two signatures in this profile, it is the one that has to survive; the notification's JWS is verified within seconds of issue and then never again.
 
-**Long-term evidence validity.** Beyond algorithm migration, evidence must remain verifiable across its retention period. QTSPs **MUST** archive the full certificate chains used for verification — a signature is unverifiable once the chain that validated it is gone, however sound the algorithm — and **SHOULD** re-timestamp before deprecation ([WMP-EVIDENCE] §8.5).
+**Long-term evidence validity.** Beyond algorithm migration, evidence must remain verifiable across its retention period. QTSPs **MUST** archive the full certificate chains used for verification and **MUST** re-timestamp to **JAdES-B-LTA** before deprecation, on the trigger and cadence of Section 15.8 ([WMP-EVIDENCE] §8.5).
 
 ---
 
@@ -1498,6 +1519,8 @@ The urgency is asymmetric, and the asymmetry matters. MLS ciphertext is ephemera
 [EN-319-522-4-1] ETSI (2023) *Electronic Signatures and Infrastructures (ESI); Electronic Registered Delivery Services; Part 4-1: Bindings; Sub-part 1: Bindings for Message Transfer*. ETSI EN 319 522-4-1.
 
 [EN-319-182-1] ETSI (2021) *Electronic Signatures and Infrastructures (ESI); JAdES digital signatures; Part 1: Building blocks and JAdES baseline signatures*. ETSI EN 319 182-1.
+
+[TS-119-312] ETSI (2024) *Electronic Signatures and Infrastructures (ESI); Cryptographic Suites*. ETSI TS 119 312.
 
 [EIDAS] European Parliament and Council (2014) *Regulation (EU) No 910/2014 on electronic identification and trust services for electronic transactions in the internal market (eIDAS)*. Available at: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32014R0910
 
