@@ -34,6 +34,17 @@ The amended eIDAS Regulation is supported by several implementing acts defining 
   - [2025/1570 – Notification of certified or cancelled QSCDs](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=OJ:L_202501570)
   - [2025/1572 – QTSP initiation, notification and verification](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=OJ:L_202501572)
 
+#### Dynamic Regulatory Alignment and Pilot Baseline
+The implementing acts supporting the EUDI Wallet ecosystem are subject to continuous amendment by the European Commission to align with evolving standards. The consortium actively monitors these updates and manages technical impacts through strict change control. 
+
+Where newly introduced requirements or production-grade qualification schemes cannot be fully realized within the project’s timeframe, the pilots utilize documented workarounds (such as simulated registries or synthetic data) to maintain a stable technical foundation. Full alignment with these emerging baselines is treated as a post-pilot transition target.
+
+| Amending Regulation (July 2026) | Target / Scope | Amends Original Regulation(s) |
+| :--- | :--- | :--- |
+| [Regulation (EU) 2026/1730](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32026R1730) | Standards and specifications for relying party registers | 2025/848 |
+| [Regulation (EU) 2026/1731](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32026R1731) | Cryptographic mechanisms, secure storage, and interfaces | 2024/2977, 2024/2979, 2024/2980, 2024/2982|
+| [Regulation (EU) 2026/1735](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32026R1735) | Standards and catalog of schemes for attribute attestations | 2025/1569 |
+
 ### Standardisation and Technical Specifications
 The European Commission, together with the European Digital Identity Cooperation Group, has published:
 
