@@ -5,7 +5,7 @@ Date: 10 September 2026
 
 **Revision history**
 
-* Version 0.9 (10 September 2026): Returned encrypted request delivery outside the Digital Credentials API to the RECOMMENDED level of TS12 section 3.5 for RPs, keeping WU support mandatory and fixing the negotiation through `request_uri_method` `post`; stated that the response mode is inherited from CS-02.
+* Version 0.9 (10 September 2026): Returned encrypted request delivery outside the Digital Credentials API to the RECOMMENDED level of TS12 section 3.5 for RPs, keeping WU support mandatory and fixing the negotiation through `request_uri_method` `post`; stated that the response mode is inherited from CS-02; changed the payment schema reference in the VC Type Metadata example from `schema` to `schema_uri` per TS12 section 4.1.
 * Version 0.8 (31 August 2026): Made the document an explicit profile of CS-01 and CS-02, aligned the signed-request rule with CS-02, made encrypted request delivery mandatory outside the Digital Credentials API, corrected TS12 and CS-02 section references and the `sca-user` VCT, labelled the requirement sections by lifecycle phase (issuance vs presentation), verified and expanded the examples against TS12, and applied editorial cleanup.
 * Version 0.7 (31 August 2026): Initial draft, profiling TS12 [1] for use within WE BUILD.
 
@@ -174,7 +174,7 @@ All requirements in this section apply at issuance time. The Attestation Provide
   "category": "urn:eu:europa:ec:eudi:sua:sca",
   "transaction_data_types": {
     "urn:eudi:sca:payment:1": {
-      "schema": "urn:eudi:sca:payment:1",
+      "schema_uri": "urn:eudi:sca:payment:1",
       "claims": [
         {
           "path": ["payload", "amount"],
@@ -213,6 +213,8 @@ All requirements in this section apply at issuance time. The Attestation Provide
 ```
 
 In this profile, the key of each `transaction_data_types` entry is the transaction type itself (`urn:eudi:sca:payment:1`), so the value that the RP sends as `transaction_data.type` is also the key that the WU looks up (TS12 [1] section 3.2).
+
+The payment schema is referenced by its URN in `schema_uri`, which TS12 [1] section 4.1 defines for references, whereas `schema` is defined for an embedded JSON Schema. The WU recognises `urn:eudi:sca:payment:1` as the built-in payment schema of TS12 [1] section 4.3.1 and does not resolve it. The non-normative example in TS12 [1] section 2.3 uses `schema` for the same URN; this inconsistency is reported upstream in eudi-doc-standards-and-technical-specifications issue 651.
 
 ## 7.3 Wallet Unit Requirements (Presentation)
 
