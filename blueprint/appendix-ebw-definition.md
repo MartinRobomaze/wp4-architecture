@@ -6,13 +6,13 @@ Revision 1.1
 
 # Scope and context
 
-This document sets out a non-technical working definition of "business wallet" as introduced in the European Business Wallet regulatory proposal, to support a common interpretation within WE BUILD and in dialogue with the European Commission. It is intended as reference material for the WE BUILD use case and capability work. It does not cover detailed architecture, protocol choices, implementation design, or use case roadmaps.
+This document sets out a non-technical working definition of "business wallet" as introduced in the European Business Wallet (EBW) regulatory proposal, to support a common interpretation within WE BUILD and in dialogue with the European Commission. It is intended as reference material for the WE BUILD use case and capability work. It does not cover detailed architecture, protocol choices, implementation design, or use case roadmaps.
 
 This document draws on the EUDI Wallet regulations, EWC deliverables [\[6\]](#references), and relevant industry and consortium publications. Its main legal reference is the text of the proposed Regulation on the establishment of European Business Wallets as agreed in the Council’s general approach of 9 June 2026, published as Council document 10346/26 [\[2\]](#references), read together with the original Commission proposal COM(2025) 838 [\[1\]](#references) and the European Parliament ITRE rapporteur’s draft report [\[3\]](#references).
 
 # Purpose of the European Business Wallet
 
-The European Business Wallet (EBW) is a digital tool for economic operators — companies, organisations, self-employed persons, sole traders and other entities conducting economic activity — to interact with public sector bodies when meeting reporting obligations and fulfilling administrative procedures, and to reuse the same trusted functions in business-to-business settings. Its purpose is to:
+The EBW is a digital tool for economic operators — companies, organisations, self-employed persons, sole traders and other entities conducting economic activity — to interact with public sector bodies when meeting reporting obligations and fulfilling administrative procedures, and to reuse the same trusted functions in business-to-business settings. Its purpose is to:
 
 - reduce administrative burdens and compliance costs by replacing paper-based and fragmented digital processes;
 - give economic operators and public sector bodies secure and trusted digital identification across borders;
@@ -25,15 +25,13 @@ The European Business Wallet (EBW) is a digital tool for economic operators — 
 
 A **Business Wallet** is a combination of software, hardware, services, settings and configurations that enables an organisation to identify itself, manage authorisations, exchange verified attributes and documents, and receive legally relevant notifications in support of administrative and regulatory procedures.
 
-In the words of the draft Regulation, a European Business Wallet is a digital solution that allows its owner to **securely receive, store, manage, combine and present** owner identification data and electronic attestations of attributes to relying parties and to other entities using European Business Wallets or European Digital Identity Wallets. The European Parliament rapporteur proposes to make explicit that the wallet must also **securely request and obtain** such data, underlining that the wallet is an active participant in data exchange, not only a store. In practical terms, the wallet:
+In the words of the draft Regulation, a European Business Wallet is a digital solution that allows its owner to **securely receive, store, manage, combine and present** owner identification data and electronic attestations of attributes to relying parties and to other entities using EBWs or EUDI Wallets. The European Parliament rapporteur proposes to make explicit that the wallet must also **securely request and obtain** such data, underlining that the wallet is an active participant in data exchange, not only a store. In practical terms, the wallet:
 
 - authenticates its owner and provides verified owner identification data to relying parties;
 - gives access to electronic attestations of attributes, electronic signatures and seals, electronic registered delivery and time stamps; and
 - lets the owner create, manage, delegate and revoke authorisations for its users.
 
-Unlike European Digital Identity Wallets, a European Business Wallet does not need to be an eID means under an eID scheme, although it may reuse similar components.
-
-**_WE BUILD implementation note:_** _The topic of online business identity, potentially outside of eID schemes, needs to be further discussed within the WP4 Architecture group. It may also have consequences for the WP4 PID/LPID Providers group._
+Unlike EUDI Wallets, a EBW does not need to be an eID means under an eID scheme, although it may reuse similar components.
 
 A full technical decomposition is out of scope for this document. For orientation, the draft Reguladdtion itself distinguishes the **wallet solution** (the combination of software, hardware, services and configurations offered by a provider), the **wallet unit** (a unique configuration of that solution provided to a specific owner), the **front-end** (the user-facing component) and the **back-end** (the server-side components).
 
@@ -41,7 +39,7 @@ A full technical decomposition is out of scope for this document. For orientatio
 
 Each Business Wallet has a single **wallet owner**, which is the entity that the wallet represents through its interactions. Note that this is distinct from, for example, the company owner or the wallet provider. An economic operator can become a wallet owner through ownership, licence, subscription or any other agreement granting a right of use.
 
-The wallet owner is defined by **European Business Wallet Owner Identification Data (EBW-OID)**, which includes at least the official name of the owner as recorded in the relevant register, and an EU-unique identifier. These owner identification data are issued into the business wallet as an electronic attestation of attributes and must be **cryptographically bound** to the wallet of the owner.
+The wallet owner is defined by **European Business Wallet Owner Identification Data (EBWOID)**, which includes at least the official name of the owner as recorded in the relevant register, and an EU-unique identifier. These owner identification data are issued into the business wallet as an electronic attestation of attributes and must be **cryptographically bound** to the wallet of the owner.
 
 A Business Wallet can have multiple **wallet users**, meaning natural or legal persons that operate the wallet through a user interface or an application programming interface under roles and authorisations set by the wallet owner. These wallet users may apply software applications to access these interfaces. Some users may be **authorised representatives**, while others may be employees or service providers operating within delegated permissions.
 
@@ -52,7 +50,7 @@ On terminology: the Commission proposal used the term "mandate" for the permissi
 
 ## Relationship with the EUDI Wallet
 
-The EBW builds on and complements the European Digital Identity Framework:
+The EBW builds on and complements the EUDI Framework:
 
 - The proposal amends Article 5a of the eIDAS Regulation so that the mandatory issuance of European Digital Identity Wallets applies to **natural persons only**. The EBW becomes the intended solution for legal persons and other economic operators.
 - **EUDI Wallets, notified eID means and electronic attestations of attributes can be used to onboard the owner and to authenticate wallet users**. The natural person who enrols the owner (a legal representative or other lawfully empowered person) identifies with an eID means at level of assurance "high".
@@ -83,7 +81,7 @@ graph TB
     Owner(Wallet owner) -->|"is represented by, accountable for"| EBW(Business Wallet)
     Users(Wallet users / authorised representatives) -->|"operate under authorisations"| EBW
     Provider(EBW provider) -->|"provides and maintains"| EBW
-    OID(Provider of EBW-OID) -->|"issues owner identification data"| EBW
+    OID(Provider of EBWOID) -->|"issues owner identification data"| EBW
     EBW ---|"digital address listed in"| Dir(European Digital Directory)
     COM(European Commission) -->|"operates"| Dir
     Sup(Supervisory body) -->|"authorises and supervises"| Provider
@@ -118,17 +116,17 @@ graph TD
     class A,B,C,D,E,F layer
 ```
 
-1. **Core functionalities** — the capabilities every EBW must give its owner. In simplified form: securely issue, request, obtain, select, combine, store, delete, share and present electronic attestations of attributes, with selective disclosure; securely exchange EBW-OID and attestations with other EBWs, EUDI Wallets and relying parties; sign with qualified electronic signatures and seal with qualified electronic seals; use qualified electronic time stamps; have attestations issued for data for which the owner is the primary source, and link attestations into verifiable chains; authenticate users with qualified and non-qualified attestations; transmit and receive documents and data via the QERDS set out in the Annex; authorise multiple users and manage and revoke those authorisations; authorise and manage relying-party requests; export and import wallet data; access a log of all communications and transactions; and access a common dashboard for the QERDS channel. Providers may offer additional functionalities as long as these do not compromise the core.
-2. **Technical features** — the common protocols and interfaces the wallet must support: issuance of EBW-OID, attestations and certificates; relying-party request and validation; sharing and presentation with selective disclosure; interaction automatically without manual intervention or through direct user action; secure remote onboarding; wallet-to-wallet interaction (EBW–EBW and EBW–EUDIW); relying-party authentication; verification of wallet authenticity and validity; QERDS provision including the Directory interface and at least one unique digital address per owner; and wallet unit attestations. Accessibility for persons with disabilities is also mandated.
+1. **Core functionalities** — the capabilities every EBW must give its owner. In simplified form: securely issue, request, obtain, select, combine, store, delete, share and present electronic attestations of attributes, with selective disclosure; securely exchange EBWOID and attestations with other EBWs, EUDI Wallets and relying parties; sign with qualified electronic signatures and seal with qualified electronic seals; use qualified electronic time stamps; have attestations issued for data for which the owner is the primary source, and link attestations into verifiable chains; authenticate users with qualified and non-qualified attestations; transmit and receive documents and data via the QERDS set out in the Annex; authorise multiple users and manage and revoke those authorisations; authorise and manage relying-party requests; export and import wallet data; access a log of all communications and transactions; and access a common dashboard for the QERDS channel. Providers may offer additional functionalities as long as these do not compromise the core.
+2. **Technical features** — the common protocols and interfaces the wallet must support: issuance of EBWOID, attestations and certificates; relying-party request and validation; sharing and presentation with selective disclosure; interaction automatically without manual intervention or through direct user action; secure remote onboarding; wallet-to-wallet interaction (EBW–EBW and EBW–EUDIW); relying-party authentication; verification of wallet authenticity and validity; QERDS provision including the Directory interface and at least one unique digital address per owner; and wallet unit attestations. Accessibility for persons with disabilities is also mandated.
 3. **Provider requirements and obligations** — who may provide wallets and under what conditions.
-4. **Annex requirements** — minimum technical requirements grouped by topic: unit authentication, unit integrity, secure communication and critical asset management, secure cryptographic applications, unit authenticity and validity, revocation of unit attestations, transaction logs, qualified signatures and seals, signature creation applications, data export, import and portability, the secure legal communication channel, the access control mechanism, general protocols and interfaces, and issuance of attestations and EBW-OID to wallet units.
-5. **Implementing acts** — the Commission will adopt lists of reference standards and, where necessary, specifications and procedures for the core functionalities, technical features, provider risk management, EBW-OID, unique identifiers and the Directory. In the Council text these acts are due within one year of entry into force. The actual interoperability of the ecosystem will largely be decided in these acts.
+4. **Annex requirements** — minimum technical requirements grouped by topic: unit authentication, unit integrity, secure communication and critical asset management, secure cryptographic applications, unit authenticity and validity, revocation of unit attestations, transaction logs, qualified signatures and seals, signature creation applications, data export, import and portability, the secure legal communication channel, the access control mechanism, general protocols and interfaces, and issuance of attestations and EBWOID to wallet units.
+5. **Implementing acts** — the Commission will adopt lists of reference standards and, where necessary, specifications and procedures for the core functionalities, technical features, provider risk management, EBWOID, unique identifiers and the Directory. In the Council text these acts are due within one year of entry into force. The actual interoperability of the ecosystem will largely be decided in these acts.
 6. **Authorisation and supervision** — the process through which providers are admitted to and kept on the trusted list.
 
 ## Architecture overview
 
 ![Business wallet architecture overview](../images/ebw-architecture-overview.png)
-*Figure D.1: architecture overview of the European Business Wallet.*
+*Figure D.1: architecture overview of the EBW.*
 
 The figure groups the capabilities of a business wallet in five layers, from the interfaces it exposes to the keys and storage at its core, with three concerns that apply across all of them. The business wallet is a set of standardised identity, trust and authorisation services, and an entry point into a broader trust infrastructure rather than that infrastructure itself. Transactional business data and operational workflows stay in the systems that already hold them. Several of these capabilities are described in more detail under Key functions below.
 
@@ -150,10 +148,9 @@ These are the operations the owner performs through the wallet, matching the rol
 
 This layer is what the functions rely on. Trust registry consumption and evaluation means resolving trust anchors from published trusted lists and evaluating counterparties against them; the wallet consumes those lists rather than operating them. What a counterparty is entitled to do is established separately, through registration data and relying-party access certificates. Credential catalog and schema management covers the attestation schemes and rulebooks a wallet supports, which determine how an attestation is structured and interpreted. Cryptographic functions and credential format management covers the formats and cryptographic profiles it supports. Status management and revocation let a relying party check whether an attestation is still valid, using the IETF Token Status List.
 
-
 ### Identity and access management
 
-The owner is identified by European Business Wallet Owner Identification Data, a stable minimal attribute set cryptographically bound to the wallet. Users authenticate with an electronic identification means before any wallet functionality becomes available. Authorisations granted inside the wallet, whether technical or administrative, do not create, limit or affect any power of attorney or legal mandate. Delegation of authority supports both role-based and service-based models.
+The owner is identified by EBWOID, a stable minimal attribute set cryptographically bound to the wallet. Users authenticate with an eID means before any wallet functionality becomes available. Authorisations granted inside the wallet, whether technical or administrative, do not create, limit or affect any power of attorney or legal mandate. Delegation of authority supports both role-based and service-based models.
 
 ### Keys and storage
 
@@ -167,7 +164,7 @@ Keys are generated, protected and used inside a wallet secure cryptographic appl
 
 ### Wallet lifecycle management
 
-The business wallet enrols its owner via the electronic identification of an authorised (legal) representative — using an eID means at assurance level "high" — and facilitates enrolment in connected trust services and directory services. The wallet provider is responsible for attesting to its validity to relying parties (via wallet unit attestations and public validity information) and enabling authorised representatives to revoke the business wallet and perform other lifecycle changes.
+The business wallet enrols its owner via the eID of an authorised (legal) representative — using an eID means at assurance level "high" — and facilitates enrolment in connected trust services and directory services. The wallet provider is responsible for attesting to its validity to relying parties (via wallet unit attestations and public validity information) and enabling authorised representatives to revoke the business wallet and perform other lifecycle changes.
 
 The validity of a wallet must be revocable at least in the following circumstances: 
 
@@ -178,18 +175,16 @@ The validity of a wallet must be revocable at least in the following circumstanc
 
 Users affected by the revocation of a wallet unit attestation must be informed within 24 hours. Providers must also maintain termination plans that keep information accessible if they cease their activities, and must notify owners of suspension, revocation or termination of the service and transfer or delete owner data according to the owner's instructions.
 
-**_WE BUILD implementation note:_** _This will be the responsibility of the WP4 Wallet Providers group. At least several providers will be ready to manage their wallet solution and issue wallet units under new and changing business wallet requirements._
-
 ### Owner identification data and unique identifiers
 
-EBW-OID establishes the identity of the owner. Key points:
+EBWOID establishes the identity of the owner. Key points:
 
-- EBW-OID is issued in one of the standard formats of Implementing Regulation (EU) 2024/2979 as: a **qualified electronic attestation of attributes** (issued by a QTSP); an **attestation issued by or on behalf of a public sector body responsible for an authentic source**; or an **attestation issued by the Commission** (for Union entities). Commission-issued EBW-OID has the same legal effect as the other two forms.
+- EBWOID is issued in one of the standard formats of Implementing Regulation (EU) 2024/2979 as: a **qualified electronic attestation of attributes** (issued by a QTSP); an **attestation issued by or on behalf of a public sector body responsible for an authentic source**; or an **attestation issued by the Commission** (for Union entities). Commission-issued EBWOID has the same legal effect as the other two forms.
 - It contains at least the **official name** of the owner as recorded in the relevant register, and the **unique identifier**.
 - Where the owner has been attributed a **European Unique Identifier (EUID)** under Directive (EU) 2017/1132 (publicly accessible through BRIS and used by BORIS), that identifier is used. Owners without an EUID receive a similar unique identifier created in accordance with a Commission implementing act, with measures ensuring that no owner has more than one identifier.
 - Verification relies on **authentic sources** (business registers and other registers), which Member States notify to the Commission; the Commission publishes the list in machine-readable form.
-- EBW-OID must be **cryptographically bound** to the owner's wallet.
-- The Commission maintains an **attestation scheme** for EBW-OID in the EU catalogue of schemes.
+- EBWOID must be **cryptographically bound** to the owner's wallet.
+- The Commission maintains an **attestation scheme** for EBWOID in the EU catalogue of schemes.
 
 ### Digital document management
 
@@ -279,7 +274,7 @@ Wallet Messaging Protocol (WMP) is the optional API access protocol between a bu
 
 The Commission establishes, operates and maintains a **European Digital Directory** as the trusted source of information for EBW owners. It takes the form of a web application with two interfaces: a machine-readable API for system-to-system communication, and a secure web portal for authenticated and authorised wallet users.
 
-For each owner, providers submit at least: the official name (as in the national register of the country of establishment or habitual residence), the unique identifier, the digital address(es), and the country of establishment. Public sector bodies that are not EBW owners are also listed, with the same categories of information. Keeping the Directory accurate is a chain of duties: providers verify owner information at least **every 72 hours** (where applicable using mechanisms of the relevant authentic sources), and communicate changes to the Commission within **one working day** of receipt. These arrangements should not indirectly create a requirement for economic operators to update the information. Access to the Directory is limited to wallet owners, wallet users, providers and Member State authorities. The Directory relies on information made available by business registers (including through BRIS) without duplicating it, and must comply with data-protection principles such as data minimisation.
+For each owner, providers submit at least: the official name (as in the national register of the country of establishment or habitual residence), the unique identifier, the digital address(es), and the country of establishment. Public sector bodies that are not EBW owners are also listed, with the same categories of information. The Directory relies on information made available by business registers (including through BRIS) without duplicating it, and must comply with data-protection principles such as data minimisation.
 
 ### Access control mechanism
 
@@ -311,7 +306,7 @@ Providers must ensure the integrity, authenticity, availability and confidential
 
 ### Data export, import and portability
 
-The wallet owner can **export** its data — including issued EBW-OID, electronic attestations of attributes, communication logs and transaction records — in a structured, commonly used and machine-readable format, on request (European Council explicitly requested removal of this feature) or when the service terminates or the provider loses its authorisation. The owner can also **import** such data to another provider's wallet, enabling portability across providers.
+The wallet owner can **export** its data — including issued EBWOID, electronic attestations of attributes, communication logs and transaction records — in a structured, commonly used and machine-readable format, on request (European Council explicitly requested removal of this feature) or when the service terminates or the provider loses its authorisation. The owner can also **import** such data to another provider's wallet, enabling portability across providers.
 
 Portability of data does not by itself settle the continuity of cryptographic keys, provider-bound attestations, wallet unit attestations, authorisation structures or directory and delivery addresses across a migration; these remain design questions.
 
@@ -332,27 +327,15 @@ To support a wide range of business use cases, the European Business Wallet must
 
 ## Wallet providers and supervision
 
-Only providers included in the Commission's public, machine-readable **list of authorised providers** may provide European Business Wallets. The main conditions and obligations:
-
-- **Establishment and control**: providers must be established in the Union, have their principal place of business and main operations in the Union, and must not present a risk to the security of the Union; in particular they must not be subject to control by a third country or third-country entity. The Commission will adopt an implementing act on the tools, indicators and assessment frameworks for this security-risk determination.
-- **Trust and cybersecurity baseline**: providers must comply with the trust-service-provider requirements of Article 19a of the eIDAS Regulation (unless they are already QTSPs), the requirements for essential entities under the NIS2 Directive (EU) 2022/2555, and applicable cybersecurity rules including those on high-risk suppliers, extending to their software and security suppliers.
-- **Risk management**: providers must maintain policies and measures against legal, business, operational and other direct or indirect risks, covering at least registration and onboarding procedures, the procedural and administrative checks needed to provide wallets, and the management and implementation of the wallets; keep a documented, up-to-date risk assessment; and update their self-assessment at least every 24 months or immediately after significant incidents, substantial changes, suspensions of security-relevant functions, or newly identified risks.
-- **Authorisation process**: entities apply to the national supervisory body with identification information, a description of how the core functionalities will be offered, and a self-assessment report, including a risk assessment and termination plans.
-- **QTSP light route**: qualified trust service providers are not subject to the full review; upon submission of the required information they are added to the list and may immediately offer wallets.
-- **Supervision and penalties** (in brief): each Member State designates a supervisory body with ex-post supervisory powers; administrative fines can reach up to 2% of total worldwide annual turnover; in cases of persistent non-compliance the Commission can temporarily suspend a provider from the list; the Commission itself supervises Union entities other than Union institutions that act as providers.
-
-## Third-country aspects
-
-- The Commission may adopt implementing acts recognising **third-country business wallets, solutions or frameworks** as offering equivalent assurances, provided they are interoperable with the eIDAS trust framework and support at least identification, authentication and the exchange of electronic attestations of attributes. The prior assessment covers data-protection standards, cybersecurity compliance and independence from control by high-risk governments.
-- Providers may issue EBWs to **economic operators established outside the Union**, provided identity proofing meets the methods of the eIDAS Regulation and the operator holds only one set of EBW-OID and one unique identifier; supervisory bodies cooperate (and may use the Directory) to prevent duplicates.
+Only providers included in the Commission's public, machine-readable **list of authorised providers** may provide EBWs. The conditions and obligations are many, ranging from where the provider is established, if it is a trust service provider or not, as well as policies for risk management, etc. In the WE BUILD scope we will host a list of the Business Wallet providers in the consortium. 
 
 # Obligations on public sector bodies
 
-Public sector bodies — including Union entities — must enable economic operators to use the wallet's core functionalities to **identify and authenticate, sign or seal, submit documents, and send or receive notifications**, for the purpose of meeting a reporting obligation or fulfilling an administrative procedure. For submissions and notifications they must themselves have EBWs including the QERDS channel. Public sector bodies keep flexibility on *how* they accept the wallets, may maintain existing interfaces and digital tools, and should avoid disproportionate burdens especially on SMEs.
+Public sector bodies must enable economic operators to use the wallet's core functionalities to **identify and authenticate, sign or seal, submit documents, and send or receive notifications**, for the purpose of meeting a reporting obligation or fulfilling an administrative procedure. For submissions and notifications they shall themselves have EBWs including the QERDS channel. Public sector bodies keep flexibility on *how* they accept the wallets, may maintain existing interfaces and digital tools, and should avoid disproportionate burdens especially on SMEs. 
 
 # Current challenges and open topics
 
-The following topics are known to be unsettled. For each, this section summarises what the draft texts already say and what remains open.
+The following topics are known to be unsettled but is needed for the WE BUILD use cases to move forward. 
 
 ## Automated machine-to-machine communication and agent-mediated transactions
 
@@ -366,45 +349,27 @@ The following topics are known to be unsettled. For each, this section summarise
 
 **What is known.** An EBW does not need to be an eID means. Identification and authentication in the framework rely on electronic attestations issued by trusted entities. Wallets must interact with other EBWs and with EUDI Wallets, authenticate relying parties where required, and prove their own authenticity and validity via wallet unit attestations and validation mechanisms.
 
-**What is open.** The relying-party authentication mechanism; whether EUDI Wallet relying-party access certificates are reused unchanged; the precise relationship between EBW-OID (owner), the wallet unit attestation (wallet unit) and the credentials of the acting representative (user); and the consent and disclosure-policy handshake between wallets.
+**What is open.** The relying-party authentication mechanism; whether EUDI Wallet relying-party access certificates are reused unchanged; the precise relationship between EBWOID (owner), the wallet unit attestation (wallet unit) and the credentials of the acting representative (user); and the consent and disclosure-policy handshake between wallets.
 
-**_WE BUILD implementation note:_** _EBW-OID, wallet unit attestation, representative identity, relying-party authentication and consent should be kept as distinct design elements in the WE BUILD conformance and architecture work._
+**_WE BUILD implementation note:_** _EBWOID, wallet unit attestation, representative identity, relying-party authentication and consent should be kept as distinct design elements in the WE BUILD conformance and architecture work._
 
 ## Authorisation interoperability and the legal/technical boundary
 
 **What is known.** Authorisation logic must be interoperable across Member States, mappings must be verifiable, auditable, revocable and traceable, and conflicts must be prevented in real time. Authorisations are technical and do not affect legal powers of attorney; compatibility with the EU digital power of attorney is expected. The exchange of authorisation data with national registers is named as an implementing-act topic.
 
-**What is open.** There is no common authorisation or mandate credential yet, no agreed policy language, and no established mapping between technical wallet permissions and legal representation under national law. That mapping will differ per Member State and per procedure.
+**What is open.** There is no common authorisation or mandate credential yet, no agreed policy language, and no established mapping between technical wallet permissions and legal representation under national law. That mapping will differ per Member State and per procedure. 
 
 ## Owner-issued ("primary source") attestations
 
 **What is known.** Attestations can be issued, by the provider on behalf of the owner, for data for which the owner is the primary source, and linked into verifiable chains.
 
-**What is open.** Whether the owner, the provider or a separate attestation provider is the legal issuer; who appears in the issuer field; whether the attestation asserts only that the owner declared the data or that it was verified; which assurance, status and revocation rules apply; and whether this issuance is a trust service.
-
-## Assurance levels per lifecycle stage
-
-**What is known.** Wallet unit access requires authentication at level of assurance "substantial" at least. Remote onboarding uses a legal representative's eID means at "high". Verification of EBW-OID issuance, delivery and activation is anchored to the assurance requirements of Implementing Regulation (EU) 2015/1502, with the Council text marking a move towards "high" for that verification. The EP rapporteur raises specified identity-lifecycle processes to "high" while leaving ordinary authentication at "substantial".
-
-**What is open.** The final level per process, and the conformity model: the Council text relies on self-assessment and ex-post supervision rather than a certification scheme like the one being prepared for EUDI Wallets. Conformance work should therefore test assurance **per lifecycle stage** (user authentication, onboarding, EBW-OID issuance/delivery/activation, critical cryptographic operations, migration) rather than assign one level to the whole wallet.
+**What is open.** Whether the owner, the provider or a separate attestation provider is the legal issuer; who appears in the issuer field; whether the attestation asserts only that the owner declared the data or that it was verified; which assurance, status and revocation rules apply; and whether this issuance is a trust service. 
 
 ## QERDS designation, multiplicity and resilience
 
-**What is known.** The Council text has the Commission designate the protocol and the standards for compliant implementations of "the specific" QERDS serving as the mandatory channel, with requirements on open royalty-free standards, end-to-end encryption, and procedures for continuous availability, redundancy and fallback. The EP rapporteur allows one or more QERDS.
+**What is known.** Requirements on the protocol and the standards for compliant implementations of "the specific" QERDS serving as the mandatory channel, are many but should be open royalty-free standards, end-to-end encryption, and procedures for continuous availability, redundancy and fallback. The EP rapporteur allows one or more QERDS.
 
 **What is open.** Whether multiple designated services will coexist; provider selection; routing and address resolution; portability between QERDS providers; and whether every wallet must be preconfigured with more than one service. For Member States with an established national delivery channel that is not a QERDS, the coexistence of that channel with a designated EU-level QERDS is a further open question.
-
-## Portability continuity
-
-**What is known.** Export and import of owner data in an open, machine-readable format are required core functionalities.
-
-**What is open.** Continuity across providers of cryptographic keys, provider-issued or provider-bound attestations, wallet unit attestations and status services, authorisation structures, and directory and delivery addresses. These are migration and provider-exit design questions.
-
-## Sovereignty and hosting
-
-**What is known.** Providers must be EU-established with main operations in the EU and free of third-country control; high-risk-supplier restrictions can apply.
-
-**What is open (EP proposals).** The ITRE draft report extends the sovereignty conditions to "supporting infrastructure service providers" (cloud hosting, cryptographic key management, secure networks, identity-verification tools) and requires EBW data to be stored and processed exclusively in the Union. If retained, this would materially affect supplier eligibility, cloud architecture, key management and disaster recovery. The exact scope of "European Business Wallet data" (telemetry, support access, backups) is undefined.
 
 ## Separation of personal and professional identity: the "Employee Wallet" idea
 
@@ -413,12 +378,6 @@ The following topics are known to be unsettled. For each, this section summarise
 **Current ideas.** One market response is a companion mobile application for employees — often called an **"Employee Wallet"** — that works together with the (typically web-based) Business Wallet of the organisation. The idea: the organisation issues professional credentials (for example a verified-employee attestation with name, employee ID and department) from its Business Wallet into the employee's companion wallet; the employee then uses these professional credentials to authenticate to the EBW and to act in their professional role, while their personal EUDI Wallet and personal credentials stay separate. This separates professional life from private life and keeps the employment relationship, not the private identity, at the centre of business transactions. Such solutions already exist in the market: at least one WE BUILD participant offers an organisational Business Wallet that issues and verifies credentials such as employee IDs, together with a companion wallet for individuals that manages personal and professional credentials in one secure app while keeping them distinguishable [\[8\]](#references). The broader rationale for separating "private individual" and "employee" credential contexts is also discussed in the wider identity community [\[9\]](#references).
 
 **What is open.** The Employee Wallet is a market concept, not something defined in the draft Regulation. Open questions include: who issues and revokes employee credentials and how their lifecycle follows the employment relationship (for example revocation when employment ends); which assurance level such an app can reach and whether it qualifies as "an alternative authentication mechanism recognised as equivalent" to a notified eID means at level "substantial" ; how it relates to the wallet's role and authorisation model; and device policy (private versus corporate devices).
-
-## Uniformity of public-sector acceptance
-
-**What is known.** All public sector bodies must enable the four acceptance actions (identify/authenticate, sign/seal, submit, notify), with flexibility on implementation.
-
-**What is open.** The EP rapporteur proposes exempting municipalities with 10,000 inhabitants or fewer from the mandatory obligation. If retained, B2G coverage would be less uniform than the Commission proposal suggested, which matters for pilot and rollout planning.
 
 # References
 
