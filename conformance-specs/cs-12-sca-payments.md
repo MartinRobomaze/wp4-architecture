@@ -16,6 +16,7 @@ Date: 10 September 2026
 * Filip Hladky, BankID, Czech Republic
 * Lal Chandran, iGrant.io, Sweden
 * George J Padayatti, iGrant.io, Sweden
+* Michele Massetti, Lissi, Germany
 
 Table of Contents
 
