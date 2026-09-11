@@ -2,6 +2,10 @@
 
 Version 0.1 (Draft)
 
+**Authors / Contributors**: WP4 Architecture
+- Martin Micuch
+- Leif Johansson
+
 ## Table of Contents
 
 - [1. Introduction](#1-introduction)
