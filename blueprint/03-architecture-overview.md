@@ -10,10 +10,19 @@ While the previous chapter describes the regulatory and architectural frameworks
 
 ## The Ecosystem at a Glance
 The EUDI Wallet and EBW ecosystem follows the common three-party attestation model. In this model, three primary actors interact: issuer, holder and verifier. A trust framework supports these actors by providing the trust anchors used for validation.
-1. **Holder** – the wallet controlled by a natural or legal person.
+1. **Holder** – Natural person or economic operator receiving, storing and sharing credentials.
 2. **Issuer** – an entity that issues attestations to the Holder.
-3. **Verifier** – a relying party that receives and validates attestations presented by the Holder.
+3. **Verifier** – an economic operator or natural person that requests and verifies the authenticity and validity of a holder's credential.
 4. **Trust framework** – the infrastructure used to validate trust relationships between ecosystem participants (described in Chapter 6).
+
+The diagram below shows the **WE BUILD reference pattern** for the ecosystem.
+
+![Ecosystem overview](../images/ecosystem-overview.png)
+*Figure 1: WE BUILD reference pattern for the EUDIW / EBW ecosystem.*
+
+In this reference pattern, Issuers use the issuance capabilities of the European Business Wallet (EBW) to issue attestations to the Holder; the Holder uses the EUDI Wallet (for natural persons) or the European Business Wallet (for economic operators) to present attestations to the Verifier; and Verifiers use the verification capabilities of the European Business Wallet to validate the attestations presented by the Holder. The foundation of the ecosystem is the Trust framework, where Issuers publish keys, identifiers and schemas, and Verifiers register as Relying Parties.
+
+The EBW is an architectural construct (a defined role and set of capabilities), not a regulated entity, certification artefact, or deployment specification. The reference pattern is what the WE BUILD pilots are designed to evidence; it does not preclude conformant implementations that follow a different architectural choice. Regulatory paths follow the attestation tier: QEAAs are issued via the QEAASP path under eIDAS2 with the EBW operating outside that certified scope, while PuB-EAAs (including the EBWOID) are anchored in the relevant authentic source.
 
 ## System Landscape
 
@@ -89,18 +98,19 @@ WE BUILD supports wallet solutions for both natural persons and economic operato
 
 Natural persons interact through EUDI Wallets, which enable individuals to authenticate and present personal identity attributes. Economic operators interact through EBW, which enable organisations to manage and present business-related attestations such as representation rights or organisational attributes.
 
-From a deployment perspective, wallet solutions can be implemented in several ways depending on the target users, operational requirements, and cryptographic architecture. In practice, three main implementation approaches are relevant within the WE BUILD ecosystem.
+From a deployment perspective, wallet solutions can be implemented in several ways depending on the target users, operational requirements, and cryptographic architecture. Three implementation approaches are relevant within the WE BUILD ecosystem, distinguished by where the wallet runs and where its keys are protected.
 
-| Wallet type | Typical context | Characteristics |
+| Wallet type | Where the wallet runs and its keys are protected | Typical context |
 |---|---|---|
-| **Mobile wallets (on-device)** | Natural persons | Wallet application running on a user’s smartphone, with credentials stored and used locally on the device. |
-| **Server or Web-based wallets** | Economic operators | Wallet services operated in backend infrastructure and accessed through Web interfaces or enterprise systems. |
-| **Hybrid wallets** | Both contexts | Combine device-based interaction with backend cryptographic infrastructure. |
+| **On-device** | Wallet Instance on the user's device, with keys protected by a WSCD on that device. | Natural persons, and use cases that require proximity or offline presentation. |
+| **Remote / server-side** | Wallet service operated in backend infrastructure, with keys protected by a server-side WSCD, typically an HSM. | Economic operators, managed services and large-scale deployments. |
+| **Hybrid** | Combines a device WSCD with a server-side WSCD. | Deployments that need both scale and offline capability. |
 
-The underlying cryptographic architecture of wallets is defined in the ARF and related standards. This Blueprint therefore focuses on the interactions and interoperability patterns relevant for WE BUILD rather than repeating the detailed wallet architecture definitions.
+The user interface is a separate question. The ARF notes that a Wallet Instance can also be a web application, so a browser-based interface can sit on top of any of the three approaches.
 
-In practice, most deployments follow a mobile-first approach for natural persons and a server-based or enterprise-integrated approach for economic operators. Hybrid architectures may also be used to combine device-based user interaction with backend cryptographic services.
+The underlying cryptographic architecture of EUDI wallets is defined in the ARF and related standards. This Blueprint therefore focuses on the interactions and interoperability patterns relevant for WE BUILD rather than repeating the detailed wallet architecture definitions.
 
+In practice, most deployments follow a mobile-first approach for natural persons and a server-based or enterprise-integrated approach for economic operators. Hybrid architectures may also be used to combine device-based user interaction with backend cryptographic services. Appendix E sets out the deployment patterns reported by WE BUILD wallet providers.
 
 ```mermaid
 flowchart TB
@@ -113,3 +123,5 @@ flowchart TB
     LE -.-> |registered with| EP
     BReg["Business registry"] -.-> |issues EU Company Certificate to| EBW
 ```
+
+Unlike natural person wallets which reside on mobile devices, the EBW typically operates in cloud or on-premises server environments. To secure these deployments, the ecosystem mandates a **Business Wallet Unit Attestation (BWUA)** based on the ETSI TS3 framework. The BWUA cryptographically binds the wallet to a secure server-side cryptographic environment—such as a cloud HSM or organisation-controlled HSM. It comprises a Business Wallet Instance Attestation (BWIA) issued by the Wallet Provider and a Server Key Attestation (SKA) proving that private keys are securely protected.
