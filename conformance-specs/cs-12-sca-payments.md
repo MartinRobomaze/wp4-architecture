@@ -1,6 +1,6 @@
 # WE BUILD - Pre-flight Conformance Specification: SCA Attestations for Payment Transactions (TS12 Profile)
 
-Version 0.9 (Draft)
+Version 1.0
 Date: 10 September 2026
 
 **Revision history**
