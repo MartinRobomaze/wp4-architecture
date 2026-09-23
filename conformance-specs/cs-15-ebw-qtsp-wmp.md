@@ -666,7 +666,7 @@ If the QTSP's session create result omits `evidence`, the session is **not** a Q
 
 ### 12.2 Evidence Capability Parameters
 
-The QTSP's negotiated `evidence` capability **MUST** specify:
+The QTSP's negotiated `evidence` capability **MUST** specify, per [WMP-EVIDENCE] Section 9.2:
 
 | Parameter | Requirement | Value |
 |---|---|---|
@@ -676,7 +676,7 @@ The QTSP's negotiated `evidence` capability **MUST** specify:
 | `signing_algorithm` | MUST | An algorithm permitted for qualified seals under eIDAS |
 | `timestamp_authority` | MUST | RFC 3161 endpoint of a qualified TSA |
 
-Per [WMP-EVIDENCE] Section 9.2, all five are conditions of ERDS conformance. A QTSP that narrows `event_types` or shortens `retention_period` below `P10Y` in the negotiated result is not offering a qualified service on that session, and the EBW **MUST** treat the session as non-qualified.
+A QTSP that narrows `event_types` or shortens `retention_period` below `P10Y` in the negotiated result is not offering a qualified service on that session, and the EBW **MUST** treat the session as non-qualified.
 
 ---
 
@@ -1481,17 +1481,17 @@ The urgency is asymmetric, and the asymmetry matters. MLS ciphertext is ephemera
 
 [RFC 2119] Bradner, S. (1997) *Key words for use in RFCs to indicate Requirement Levels*. IETF. Available at: https://datatracker.ietf.org/doc/html/rfc2119
 
-[WMP-CORE] Johansson, L. et al. (2026) *Wallet Messaging Protocol — Core Specification*. Available at: https://github.com/leifj/wmp/blob/main/spec/wmp-core.md
+[WMP-CORE] Johansson, L. et al. (2026) *Wallet Messaging Protocol — Core Specification*. Available at: https://wmp.name/spec/wmp-core
 
-[WMP-MLS] Johansson, L. et al. (2026) *Wallet Messaging Protocol — MLS Encryption Layer*. Available at: https://github.com/leifj/wmp/blob/main/spec/wmp-mls.md
+[WMP-MLS] Johansson, L. et al. (2026) *Wallet Messaging Protocol — MLS Encryption Layer*. Available at: https://wmp.name/spec/wmp-mls
 
-[WMP-EVIDENCE] Johansson, L. et al. (2026) *Wallet Messaging Protocol — Evidence Profile*. Available at: https://github.com/leifj/wmp/blob/main/spec/wmp-evidence.md
+[WMP-EVIDENCE] Johansson, L. et al. (2026) *Wallet Messaging Protocol — Evidence Profile*. Available at: https://wmp.name/spec/wmp-evidence/
 
-[WMP-EDELIVERY] Johansson, L. et al. (2026) *Wallet Messaging Protocol — eDelivery Integration Profile*. Available at: https://github.com/leifj/wmp/blob/main/spec/wmp-edelivery.md
+[WMP-EDELIVERY] Johansson, L. et al. (2026) *Wallet Messaging Protocol — eDelivery Integration Profile*. Available at: https://wmp.name/spec/wmp-edelivery/
 
-[WMP-TRANSPORT] Johansson, L. et al. (2026) *Wallet Messaging Protocol — Transport Bindings*. Available at: https://github.com/leifj/wmp/blob/main/spec/wmp-transport.md
+[WMP-TRANSPORT] Johansson, L. et al. (2026) *Wallet Messaging Protocol — Transport Bindings*. Available at: https://wmp.name/spec/wmp-transport
 
-[WMP-OPENID4X] Johansson, L. et al. (2026) *Wallet Messaging Protocol — OpenID4x Profile*. Available at: https://github.com/leifj/wmp/blob/main/spec/wmp-openid4x.md
+[WMP-OPENID4X] Johansson, L. et al. (2026) *Wallet Messaging Protocol — OpenID4x Profile*. Available at: https://wmp.name/spec/wmp-openid4x/
 
 [RFC 9420] Barnes, R. et al. (2023) *The Messaging Layer Security (MLS) Protocol*. IETF RFC 9420. Available at: https://www.rfc-editor.org/rfc/rfc9420
 
