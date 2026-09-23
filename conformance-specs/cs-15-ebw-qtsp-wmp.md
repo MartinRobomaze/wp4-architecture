@@ -1,10 +1,11 @@
 # WE BUILD - Conformance Specification: EBW–QTSP WMP Interface
 
-Version 0.1 (Draft)
+Version 1.0
 
 **Authors / Contributors**: WP4 Architecture
-- Martin Micuch
-- Leif Johansson
+- Martin Micuch, IDUnion
+- Leif Johansson, SIROS
+- Sander Dijkhuis, Cleverbase
 
 ## Table of Contents
 
