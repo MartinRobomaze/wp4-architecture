@@ -57,7 +57,6 @@ This specification defines the conformance expectations for the revocation of at
 * **Out of scope:**
   * Short-lived attestations (validity of 24 hours or less), which do not require a revocation mechanism ([4] VCR_01; [5])
   * The revocation mechanics of the WUA itself (WIA/KA status lists, maintenance periods) — covered by CS-004 [8]
-  * A dedicated Revocation Status Service as a separate role or component: for simplification reasons, this pre-flight specification assumes the Issuer publishes and serves its Status List Tokens itself
   * Suspension (temporary invalidation): only the status values VALID and INVALID are used; suspension is managed at the wallet application level without altering the cryptographic status
   * The Attestation Revocation List (identifier/serial-number list) mechanism — see §9
   * The notification protocol between Authentic Sources and Issuers — see §9
