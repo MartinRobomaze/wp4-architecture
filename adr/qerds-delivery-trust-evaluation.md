@@ -2,7 +2,7 @@
 
 **Authors:**
 
-- Contributors to [wp4-trust-group#127](https://github.com/webuild-consortium/wp4-trust-group/issues/127)
+- Martin Micuch
 
 ## Context
 
