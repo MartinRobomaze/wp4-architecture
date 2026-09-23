@@ -1,6 +1,6 @@
 # WE BUILD - Pre-flight Conformance Specification CS-010: Attestation Revocation Mechanism
 
-Version 0.1 / Pre-flight Draft
+Version 1.0 / Pre-flight Draft
 Date: 10 July 2026
 
 **Authors**: WP4 Architecture, PID/EBWOID Group (Task 5)
