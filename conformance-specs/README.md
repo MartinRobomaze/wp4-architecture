@@ -56,9 +56,11 @@ graph TB
 | CS-001   | [Credential Issuance - v1.1](cs-01-credential-issuance.md)         |
 | CS-002   | [Credential Presentation - v1.0](cs-02-credential-presentation.md) |
 | CS-003   | [Remote Qualified Signing with Wallet Units - v1.0](cs-03-remote-signing-with-wallet-units.md) |
-| CS-004   | [Individual Wallet Unit Attestation (WUA) Lifecycle - v1.0](cs-04-wua-lifecycle.md) |
-| CS-005   | [Business Wallet Unit Attestation (BWUA) Lifecycle - v1.0](cs-05-bwua-lifecycle.md) |
-| CS-007   | [Credential Presentation and Issuance via the Digital Credentials API](cs-07-credential-presentation-dc-api.md) |
+| CS-004   | [Individual Wallet Unit Attestation (WUA) Lifecycle - v1.1](cs-04-wua-lifecycle.md) |
+| CS-005   | [Business Wallet Unit Attestation (BWUA) Lifecycle - v1.1](cs-05-bwua-lifecycle.md) |
+| CS-007   | [Credential Presentation and Issuance via the Digital Credentials API](cs-07-credential-presentation-dc-api.md) 
+| CS-010   | [Revocation Mechanism - v1.0](cs-10-revocation-mechanism.md) |
+| CS-012   | [SCA Attestations for Payment Transactions (TS12 Profile) - v1.0](cs-12-sca-payments.md) |
 <!--END INDEX-->
 
 ### WBCS Under Development
@@ -68,10 +70,7 @@ graph TB
 | ---------- | ----------------------------------------------------------------------------------------------------------------------------------- | ------------------ | ------------ | --------------- |
 | CS-006     | [Issuance of Relying Party Access and Registration Certificates](https://github.com/webuild-consortium/wp4-architecture/issues/190) | 🟢 *In review*     | Must-have    | Aug 2026        |
 | CS-008     | [Identity Matching](https://github.com/webuild-consortium/wp4-architecture/issues/248)                                              | 🔵 *Investigating* | Must-have    | Aug 2026        |
-| CS-009     | [PID / EBWOID Issuance](https://github.com/webuild-consortium/wp4-architecture/issues/206)                                          | 🟡 *Drafting*      | Should-have  | Aug 2026        |
-| CS-010     | [Revocation mechanism](https://github.com/webuild-consortium/wp4-architecture/issues/188)                                           | 🟢 *In review*     | Should-have  | Aug 2026        |
 | CS-011     | [Remote QESeal creation](https://github.com/webuild-consortium/wp4-architecture/issues/167)                                         | 🟢 *In review*     | Must-have    | Sep 2026        |
-| CS-012     | [TS12 (SCA)](https://github.com/webuild-consortium/wp4-architecture/issues/210)                                                     | 🟡 *Drafting*      | Must-have    | Aug 2026        |
 | CS-013     | [Intermediary services pre-flight](https://github.com/webuild-consortium/wp4-architecture/issues/185)                               | ⚪ *Not started*   | Must-have    | Sep 2026        |
 | CS-014     | [Proximity / Offline profile](https://github.com/webuild-consortium/wp4-architecture/issues/251)                                    | 🔵 *Investigating* | Should-have  | Sep 2026        |
 | CS-015     | [QERDS - EBW Interface](https://github.com/webuild-consortium/wp4-architecture/issues/252)                                          | 🟢 *In review*     | Must-have    | Aug 2026        |
